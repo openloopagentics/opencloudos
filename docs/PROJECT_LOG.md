@@ -2,6 +2,33 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-05 — Codex runner lifecycle bound to one user and capsule
+
+**Status:** shipped supervisor contract; real process and encrypted capsule drivers not implemented
+
+Implemented the Provider Runner supervisor seam between the Broker's narrow Codex client and future local/Kubernetes/cloud runtime drivers. One immutable, secret-free manifest and one opaque Credential Capsule reference now bind to one user-owned Provider Connection.
+
+Behavior implemented:
+
+- exact client/schema revisions and an executable SHA-256 digest matching the supervisor's trusted release pin are mandatory; unknown fields such as tokens or environment maps fail before a driver runs;
+- missing and cross-user references produce the same public error, and only the owner can read, access the initialized client, stop, recover, or destroy;
+- concurrent identical starts converge on one generation, while rebinding a connection to another manifest is rejected;
+- readiness requires capsule open, runtime start, and the app-server initialization handshake;
+- unexpected exits remove client access, seal the capsule, publish only a generic failure, and require explicit recovery;
+- recovery increments a Provider Runner Generation and fences callbacks from stale handles;
+- graceful stop has a deadline and falls back to kill while preserving a sealed capsule;
+- destroy applies stop semantics, destroys the capsule, leaves sanitized tombstone metadata, and cannot be recovered;
+- capsule and runtime startup drivers receive abort signals so work can cancel before a process handle exists.
+
+Verification:
+
+- SUPERVISOR-001 through SUPERVISOR-008 pass against injected synthetic drivers;
+- 41 total Broker/Auth/Codex/transport/supervisor tests pass, including process exit during initialization;
+- no process was spawned, no encrypted storage was created, and no provider account, credential, login, or model request was used;
+- documentation verification now binds supervisor scenarios to their design record and test suite.
+
+Related decision: ADR-0010. Detailed evidence: `docs/CODEX_RUNNER_SUPERVISOR.md`. Next: implement the real local app-server runtime and encrypted capsule drivers, bind the existing JSONL transport, persist/reconcile lifecycle state, and run hostile-tool isolation before enabling turn mapping.
+
 ## 2026-08-05 — Codex Provider Runner transport made fail-closed
 
 **Status:** shipped transport slice; process isolation and agent turns not supported

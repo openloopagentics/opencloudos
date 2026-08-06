@@ -104,12 +104,12 @@ Additional coverage proves a failed stdin write closes the transport and prevent
 
 Run the suite with `npm run test:broker`.
 
-## Deliberately not implemented
+## Deliberately outside this transport
 
-This slice does not yet provide:
+This transport does not provide:
 
-- a process supervisor or app-server health state;
-- a pinned Codex executable artifact and digest verification;
+- process launch, OS/container isolation, or durable reconciliation;
+- executable artifact acquisition or digest verification;
 - OS user, container, filesystem, environment, or network isolation;
 - encrypted Credential Capsule creation, reopening, deletion, or recovery;
 - workspace mount policy or separation from credential storage;
@@ -120,19 +120,15 @@ This slice does not yet provide:
 
 The Broker must not instantiate `NodeStreamCodexLineChannel` directly. A user-scoped Provider Runner creates it only after its capsule and runtime isolation are established.
 
-## Next execution slice
+## Following execution slices
 
-1. Define the Provider Runner supervisor lifecycle: `starting`, `ready`, `degraded`, `stopping`, `stopped`, and `failed`.
-2. Define a runner launch manifest containing the pinned executable digest, capsule reference, user scope, workspace mount, sandbox policy, egress policy, and resource limits—never raw provider credentials.
-3. Implement an injected runtime driver and a synthetic driver for crash, restart, health, and destruction tests.
-4. Bind exactly one app-server process and transport to one Provider Connection and reject scope reuse.
-5. Add startup timeouts, graceful shutdown, forced termination, and orphan reconciliation.
-6. Then map stable `thread/start`, `turn/start`, message deltas, authoritative completed items, terminal turns, usage, limits, and `turn/interrupt` into the Broker event contract.
-7. Keep server requests rejected until the Capability Broker and Prepared Action design can make each decision explicit and auditable.
+The capsule-bound supervisor lifecycle, exact manifest pins, initialization health, generation fencing, explicit recovery, and stop/destruction semantics now exist as a synthetic-driver contract in [Codex Provider Runner supervisor](./CODEX_RUNNER_SUPERVISOR.md). It does not weaken any of this transport's fail-closed behavior.
+
+The next slice implements the real local runtime and encrypted capsule drivers, then binds this transport to the pinned child process. Thread/turn mapping and the Capability Broker approval bridge follow only after runtime isolation passes malicious-repository conformance.
 
 Real Codex support remains blocked on the encrypted capsule, hostile-tool isolation, approved test accounts, AUTH-001 through AUTH-010 on the real runner, operational runbooks, and independent security review.
 
-Related decision: [ADR-0009](./adr/0009-use-local-stdio-and-reject-unbound-provider-requests.md).
+Related decisions: [ADR-0009](./adr/0009-use-local-stdio-and-reject-unbound-provider-requests.md) and [ADR-0010](./adr/0010-bind-runner-generation-and-capsule-to-provider-connection.md).
 
 ## Primary source
 

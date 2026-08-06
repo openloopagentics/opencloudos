@@ -201,7 +201,7 @@ export function Wiki() {
         <WikiSection id="brief">
           <div className="hero-grid">
             <div className="hero-copy">
-              <div className="release-pill"><span /> Architecture + execution · v0.6</div>
+              <div className="release-pill"><span /> Architecture + execution · v0.7</div>
               <h1>A portable operating system for <em>agentic work.</em></h1>
               <p className="hero-lede">
                 A technical blueprint for taking Cloudflare OS beyond one provider—without losing the Gadget model,
@@ -271,6 +271,7 @@ export function Wiki() {
               ["Agent Provider", "A vendor runtime supplying model inference and an agent execution loop through a documented path."],
               ["Provider Connection", "One user's link to one Agent Provider, including status and billing mode but never raw credentials."],
               ["Provider Runner", "An isolated official provider-client process serving one Provider Connection."],
+              ["Provider Runner Generation", "A fenced incarnation of one runner binding; older callbacks cannot affect the current generation."],
               ["Credential Capsule", "The per-user envelope where the official client owns and refreshes credentials outside tool reach."],
             ].map(([term, definition]) => <article key={term}><code>{term}</code><p>{definition}</p></article>)}
           </div>
@@ -462,17 +463,17 @@ export function Wiki() {
             Each user connects an eligible Claude or ChatGPT/Codex plan through the provider's official client. OpenCloudOS brokers status and agent events; it does not become an OAuth client or shared-token proxy.
           </SectionHeading>
           <div className="test-grid auth-status-grid">
-            <article><div className="test-status">IMPLEMENTED</div><h3>Broker contract</h3><p>Provider-neutral Interface, policy gate, metadata store, normalized events, audit sink, and synthetic Adapter.</p></article>
-            <article><div className="test-status">10 / 10 PASS</div><h3>AUTH suite</h3><p>Ownership, non-observability, login binding, restart, revocation, collaboration, limits, policy, recovery, and version drift.</p></article>
+            <article><div className="test-status">10 / 10 PASS</div><h3>Broker + AUTH</h3><p>Provider-neutral contract plus ownership, non-observability, login binding, restart, revocation, collaboration, limits, policy, recovery, and drift.</p></article>
             <article><div className="test-status">8 / 8 PASS</div><h3>Codex auth spike</h3><p>Pinned <code>codex-cli 0.146.1</code> schemas now prove handshake, device login, sanitation, limits, logout, and billing separation.</p></article>
             <article><div className="test-status">8 / 8 PASS</div><h3>Runner transport</h3><p>Bounded stdio JSONL now proves correlation, framing, redaction, shutdown, and default rejection of server requests.</p></article>
-            <article><div className="test-status">NEXT</div><h3>Runner + capsule</h3><p>Bind one pinned app-server process to one user connection, isolate credential storage, and prove restart and destruction.</p></article>
+            <article><div className="test-status">8 / 8 PASS</div><h3>Supervisor contract</h3><p>Exact pins, hidden ownership, initialization health, serialized starts, generation fencing, recovery, bounded stop, and destruction.</p></article>
+            <article><div className="test-status">NEXT</div><h3>Isolated runtime</h3><p>Actually spawn the pinned app-server, encrypt the capsule, bind stdio, persist state, reconcile orphans, and prove hostile-tool isolation.</p></article>
             <article><div className="test-status blocked-status">POLICY BLOCKED</div><h3>Claude subscription</h3><p>Approval request is drafted but not sent. The Broker refuses login without a recorded Anthropic approval reference.</p></article>
           </div>
           <div className="auth-table">
             <div className="auth-head"><span>Mode</span><span>Official path</span><span>1.0 disposition</span><span>Non-negotiable rule</span></div>
             {[
-              ["Codex subscription", "codex app-server managed device login", "Auth + transport spike · not production support", "One isolated app-server runner per user connection"],
+              ["Codex subscription", "codex app-server managed device login", "Auth + transport + supervisor contracts · not production support", "One isolated app-server generation and capsule per user connection"],
               ["Claude subscription", "Claude Code / Agent SDK official login", "Blocked pending Anthropic approval", "Technical feasibility is not release authority"],
               ["Claude setup-token", "CLAUDE_CODE_OAUTH_TOKEN sealed ingress", "Same approval gate", "Never a generic token-import endpoint"],
               ["API + cloud modes", "OpenAI/Anthropic keys · Bedrock · Google · Foundry", "Separate supported Adapters", "Explicit pay-as-you-go billing; no silent fallback"],
@@ -490,7 +491,7 @@ export function Wiki() {
           </div>
           <div className="security-rule"><span>PERSONAL AUTHORITY</span><strong>A collaborator may read shared history, but their next provider turn uses their own connection or stops for an explicit tenant-funded choice.</strong></div>
           <div className="callout callout-warning"><span className="callout-icon">!</span><div><strong>Claude requires a provider decision</strong><p>Anthropic documents subscription tokens for scripts, but its Agent SDK documentation says third-party Claude.ai login and subscription rate limits require prior approval. The Adapter remains <code>blocked_by_policy</code> until written approval is recorded.</p><ExternalLink href="https://code.claude.com/docs/en/agent-sdk/overview">Anthropic Agent SDK policy</ExternalLink></div></div>
-          <p className="source-note">Complete Interface, lifecycle, threat model, support matrix, and AUTH-001–010 scenarios: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/SUBSCRIPTION_AUTH.md">Subscription-backed agent providers</ExternalLink>. Pinned schema and CODEX-001–008: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_ADAPTER_SPIKE.md">Codex auth spike</ExternalLink>. Stdio framing and RUNNER-001–008: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_TRANSPORT.md">Provider Runner transport</ExternalLink>.</p>
+          <p className="source-note">Complete Interface, lifecycle, threat model, support matrix, and AUTH-001–010 scenarios: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/SUBSCRIPTION_AUTH.md">Subscription-backed agent providers</ExternalLink>. Pinned schema and CODEX-001–008: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_ADAPTER_SPIKE.md">Codex auth spike</ExternalLink>. Stdio framing and RUNNER-001–008: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_TRANSPORT.md">Provider Runner transport</ExternalLink>. Ownership, lifecycle, fencing, and SUPERVISOR-001–008: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_SUPERVISOR.md">Provider Runner supervisor</ExternalLink>.</p>
         </WikiSection>
 
         <WikiSection id="gatekeepers">
@@ -599,7 +600,8 @@ export function Wiki() {
               "Implement synthetic Provider Adapter and AUTH-001–010",
               "Pin and fixture-test Codex app-server authentication protocol",
               "Implement bounded app-server stdio transport and RUNNER-001–008",
-              "Build per-user app-server supervisor and Credential Capsule lifecycle",
+              "Implement capsule-bound supervisor contract and SUPERVISOR-001–008",
+              "Build real local app-server runtime and encrypted capsule drivers",
               "Map Codex thread/turn events and explicit approval bridge",
               "Enforce default-deny Gadget egress",
               "Port GitHub Gatekeeper through Capability Broker",
@@ -660,6 +662,7 @@ export function Wiki() {
               ["ADR-0007", "Make conformance and documentation release gates", "Proposed"],
               ["ADR-0008", "Use provider-owned, user-bound subscription authentication", "Proposed"],
               ["ADR-0009", "Use local stdio and reject unbound provider requests", "Proposed"],
+              ["ADR-0010", "Bind one runner generation and capsule to one Provider Connection", "Proposed"],
             ].map(([id, title, status]) => <div key={id}><code>{id}</code><strong>{title}</strong><span>{status}</span></div>)}
           </div>
           <p className="source-note">Review full rationale and consequences in the <ExternalLink href="https://github.com/openloopagentics/opencloudos/tree/main/docs/adr">ADR registry</ExternalLink>.</p>
@@ -720,7 +723,8 @@ export function Wiki() {
             A chronological, append-only view of material research, design, implementation, and operational changes.
           </SectionHeading>
           <div className="project-timeline">
-            <article><div><span>05 AUG 2026</span><i>Shipped transport slice</i></div><h3>Codex Provider Runner transport made fail-closed</h3><p>Implemented bounded stdio JSONL correlation and Node stream framing. Eight RUNNER scenarios cover out-of-order responses, notifications, redacted errors, malformed input, unknown IDs, fragmented frames, resource bounds, and fixed rejection of server-initiated approvals.</p><footer>Evidence · 8/8 RUNNER tests · no process spawn · no account access · no automatic approval · supervisor and capsule next</footer></article>
+            <article><div><span>05 AUG 2026</span><i>Shipped supervisor contract</i></div><h3>Codex runner lifecycle bound to one user and capsule</h3><p>Implemented exact secret-free manifest pins, hidden ownership, initialization health, serialized starts, crash generation fencing, explicit recovery, graceful and forced stop, and irreversible capsule destruction behind provider-neutral runtime drivers.</p><footer>Evidence · 8/8 SUPERVISOR scenarios · 41 total tests · no process spawn · no encrypted capsule · real local driver next</footer></article>
+            <article><div><span>05 AUG 2026</span><i>Shipped transport slice</i></div><h3>Codex Provider Runner transport made fail-closed</h3><p>Implemented bounded stdio JSONL correlation and Node stream framing. Eight RUNNER scenarios cover out-of-order responses, notifications, redacted errors, malformed input, unknown IDs, fragmented frames, resource bounds, and fixed rejection of server-initiated approvals.</p><footer>Evidence · 8/8 RUNNER tests · no process spawn · no account access · no automatic approval · now consumed by supervisor contract</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped protocol spike</i></div><h3>Codex app-server authentication made executable</h3><p>Pinned generated <code>codex-cli 0.146.1</code> auth schemas and implemented an allowlisting client plus authentication-only Adapter. Eight CODEX scenarios cover handshake, device login, account sanitation, limits, completion, logout, billing separation, and fail-closed turns.</p><footer>Evidence · 8/8 CODEX tests · no account read · no login · no provider credential · production runner still pending</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped code</i></div><h3>Provider Runtime Broker contract made executable</h3><p>Implemented the provider-neutral Broker, policy gate, in-memory store, normalized events, secret-free audit, synthetic Adapter, and all ten AUTH scenarios. CI now checks documentation integrity and blocks material changes without wiki, architecture, and Project Log updates.</p><footer>Evidence · 10/10 AUTH tests · docs verifier · TypeScript build · no production credentials</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped design</i></div><h3>Personal Claude and Codex access designed</h3><p>Added user-owned Provider Connections, Provider Runtime Broker, official-client Adapters, per-user Credential Capsules, ten AUTH scenarios, TB-007, ADR-008, and provider-policy release gates. Codex is planned through app-server managed login; Claude subscription mode is blocked pending written Anthropic approval.</p><footer>Evidence · first-party auth research · architecture + execution records · production build · Pages deployment</footer></article>
@@ -758,6 +762,7 @@ export function Wiki() {
               ["Critical", "Provider approval bypass", "Can an app-server command, file, network, permission, or MCP request execute without a bound Prepared Action and explicit decision?"],
               ["High", "Cross-user subscription spend", "Can a collaborative turn resolve a personal connection that does not belong to its initiating User?"],
               ["High", "Experimental Codex Interface", "Can pinned app-server schema drift be detected before it changes login, limit, logout, or turn behavior?"],
+              ["High", "Orphan runner recovery", "Can a restarted host reconcile processes, capsule mounts, and durable generations without two active owners or silent credential loss?"],
               ["High", "Claude provider approval", "Will Anthropic approve Claude.ai login and subscription rate limits for this third-party distribution?"],
               ["High", "WebSocket recovery", "What session state must survive pod replacement versus reconnect from the browser?"],
               ["High", "Upstream velocity", "How much runtime coupling will new Cloudflare OS releases add?"],
@@ -785,13 +790,14 @@ export function Wiki() {
               ["Codex app-server", "Host Interface and ChatGPT-managed authentication lifecycle", "https://learn.chatgpt.com/docs/app-server"],
               ["Codex auth protocol spike", "Pinned app-server schema boundary, sanitation rules, executable fixtures, and remaining release gates", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_ADAPTER_SPIKE.md"],
               ["Codex Provider Runner transport", "Bounded stdio JSONL framing, correlation, redacted failures, default server-request rejection, and remaining isolation work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_TRANSPORT.md"],
+              ["Codex Provider Runner supervisor", "Owner binding, exact pins, initialization health, generation fencing, lifecycle, synthetic conformance, and remaining real-driver work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_SUPERVISOR.md"],
               ["Claude Code authentication", "Subscription login, credential storage, precedence, expiry, and setup-token", "https://code.claude.com/docs/en/authentication"],
               ["Claude Agent SDK overview", "Third-party Claude.ai login and subscription-limit approval requirement", "https://code.claude.com/docs/en/agent-sdk/overview"],
               ["Claude Agent SDK subscription update", "Current time-sensitive treatment of third-party subscription usage", "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan"],
               ["Agent Provider compatibility record", "Current implementation, official paths, policy state, and evidence gaps", "https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md"],
             ].map(([title, note, href], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><ExternalLink href={href}>{title}</ExternalLink><p>{note}</p></div></article>)}
           </div>
-          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.6 · August 5, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
+          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.7 · August 5, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
         </WikiSection>
       </main>
     </div>

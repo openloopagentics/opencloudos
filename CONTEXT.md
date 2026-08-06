@@ -44,6 +44,10 @@ _Avoid_: OAuth token, account, API key
 An isolated process or container running an official provider client for one provider connection and its agent sessions.
 _Avoid_: Model proxy, shared worker, agent
 
+**Provider Runner Generation**:
+A monotonically increasing incarnation of one provider runner binding; callbacks and leases from an older generation cannot affect the current one.
+_Avoid_: Restart count, pod version, retry
+
 **Credential Capsule**:
 The per-user storage and execution envelope in which an official provider client owns, refreshes, and deletes credential material without exposing it to the product plane, workspace, gadget, model context, or tool subprocess.
 _Avoid_: Token database, shared secret, auth file
@@ -113,7 +117,7 @@ _Avoid_: Unit test, parity test
 - A **User** owns zero or more **Provider Connections**, each for one **Agent Provider**
 - A personal **Provider Connection** is never shared, pooled, introduced, or delegated to another user
 - An **Agent Session** records which user's **Provider Connection** funds each provider turn
-- A **Provider Runner** serves one **Provider Connection** inside one **Credential Capsule**
+- A **Provider Runner** serves one **Provider Connection** inside one **Credential Capsule** and has at most one active **Provider Runner Generation**
 - A **Blueprint** creates a new **Gadget** but never shares the source gadget's state or capabilities
 - An **Introduction** grants exactly one **Capability** to one **Agent Session** or **Gadget**
 - A **Gatekeeper** realizes one or more capability types for an external system

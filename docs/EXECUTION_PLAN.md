@@ -53,8 +53,9 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | Anthropic approval package | Drafted, not sent | Maintainer must assign owner, review scope, and send through an approved channel |
 | Codex auth protocol Adapter | Implemented as fixture spike | `codex-cli 0.146.1` schema captured; CODEX-001–008 cover handshake, sanitation, device login, limits, logout, billing separation, and fail-closed turns |
 | Codex stdio JSONL transport | Implemented | RUNNER-001–008 cover request correlation, notifications, redaction, framing, bounds, shutdown, and default rejection of server requests |
-| Codex isolated runner supervisor | Next | Bind one pinned app-server process to one user connection and Credential Capsule; prove health, crash restart, destruction, and orphan recovery |
-| Codex turn Adapter + approval bridge | Planned after supervisor | Map stable thread/turn events and route server requests through Capability Broker rather than automatic approval |
+| Codex isolated runner supervisor | Contract implemented | SUPERVISOR-001–008 prove exact pins, hidden ownership, init health, concurrency, crash fencing/recovery, stop/forced kill, and destruction against synthetic drivers |
+| Local runtime + encrypted capsule drivers | Next | Spawn pinned app-server, bind the bounded stdio transport, enforce process/filesystem/network isolation, persist metadata, and reconcile orphans |
+| Codex turn Adapter + approval bridge | Planned after real driver | Map stable thread/turn events and route server requests through Capability Broker rather than automatic approval |
 | Claude subscription Adapter | Blocked | Written Anthropic approval reference required before Adapter login can start |
 
 Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PROVIDER_COMPATIBILITY.md`, the Project Log, and the public wiki.
@@ -403,19 +404,21 @@ These issues are ordered to reduce uncertainty rather than maximize visible feat
 11. Implement generic OIDC and local development identity adapters.
 12. Define Provider Runtime Broker and implement a synthetic Adapter for AUTH-001 through AUTH-010.
 13. **Implemented:** spike Codex app-server managed device-code login from generated `codex-cli 0.146.1` schemas without reading its credential cache or a real account.
-14. **Active:** bounded app-server stdio JSONL transport is implemented; next build Provider Runner and Credential Capsule lifecycle, then map thread/turn events and implement TB-007 for Codex.
-15. Enforce default-deny Gadget egress and malicious-repository credential isolation.
-16. Port the GitHub Gatekeeper through Capability Broker semantics.
-17. Implement prepared-action and approval state machines.
-18. Add the Audit Ledger and privileged fail-closed behavior.
-19. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
-20. Define Placement Registry schema and property tests for lease epochs.
-21. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
-22. Build Shard Controller and Helm alpha.
-23. Add shard fault injection and TB-005.
-24. Add provider adapters and deployment profiles one at a time behind the same tests.
-25. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
-26. Run release-candidate security and operator validation.
+14. **Implemented contract:** capsule-bound supervisor passes SUPERVISOR-001–008 with a pinned manifest, one capsule per connection, generation fencing, explicit recovery, bounded stop, and irreversible destruction against synthetic drivers.
+15. **Active:** implement the real local app-server runtime and encrypted capsule drivers, bind the bounded stdio transport, persist supervisor state, and reconcile orphans.
+16. Map Codex thread/turn events and implement the explicit Capability Broker approval bridge.
+17. Enforce default-deny Gadget egress and malicious-repository credential isolation.
+18. Port the GitHub Gatekeeper through Capability Broker semantics.
+19. Implement prepared-action and approval state machines.
+20. Add the Audit Ledger and privileged fail-closed behavior.
+21. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
+22. Define Placement Registry schema and property tests for lease epochs.
+23. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
+24. Build Shard Controller and Helm alpha.
+25. Add shard fault injection and TB-005.
+26. Add provider adapters and deployment profiles one at a time behind the same tests.
+27. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
+28. Run release-candidate security and operator validation.
 
 ## Release gates
 

@@ -44,6 +44,30 @@ export class CodexTurnProtocolUnavailableError extends BrokerError {
   }
 }
 
+export class CodexRunnerNotFoundError extends BrokerError {
+  constructor() {
+    super("codex_runner_not_found", "Codex Provider Runner not found");
+  }
+}
+
+export class CodexRunnerManifestError extends BrokerError {
+  constructor(message: string) {
+    super("codex_runner_manifest_invalid", message);
+  }
+}
+
+export class CodexRunnerStateError extends BrokerError {
+  constructor(message: string) {
+    super("codex_runner_state_invalid", message);
+  }
+}
+
+export class CodexRunnerStartupError extends BrokerError {
+  constructor(code: "runner_start_failed" | "runner_startup_timeout") {
+    super(code, code === "runner_startup_timeout" ? "Codex Provider Runner startup timed out" : "Codex Provider Runner failed to start");
+  }
+}
+
 export class ConnectionNotFoundError extends BrokerError {
   constructor() {
     super("connection_not_found", "Provider connection not found");
