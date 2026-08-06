@@ -11,8 +11,9 @@ Documentation is part of the OpenCloudOS product and its engineering control sys
 5. `docs/SUBSCRIPTION_AUTH.md` owns agent-provider connection, credential-isolation, billing-authority, and AUTH behavior.
 6. `docs/PROVIDER_COMPATIBILITY.md` owns the time-sensitive provider support and policy matrix.
 7. `docs/DEPLOYMENT_PROFILES.md` owns the profile protocol, capabilities, configuration, reconciliation, migration, cloud mapping, and PROFILE conformance contract.
-8. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
-9. The public wiki renders the important parts of these records for readers.
+8. `docs/AWS_PROFILE.md` owns AWS bootstrap, configuration, IAM/RBAC, service behavior, recovery, cost, limitations, and promotion evidence.
+9. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
+10. The public wiki renders the important parts of these records for readers.
 
 When code and documentation disagree, the pull request must resolve the disagreement before merge. Neither side silently wins.
 
@@ -24,7 +25,7 @@ When code and documentation disagree, the pull request must resolve the disagree
 | Hard-to-reverse architectural choice | New or superseding ADR and wiki decision registry |
 | Module interface or invariant change | `docs/ARCHITECTURE.md` and relevant wiki section |
 | Milestone scope or dependency change | `docs/EXECUTION_PLAN.md` and wiki execution plan |
-| Deployment Profile protocol, driver, or operational behavior | `docs/DEPLOYMENT_PROFILES.md`, architecture, conformance, compatibility, and runbook content |
+| Deployment Profile protocol, driver, or operational behavior | `docs/DEPLOYMENT_PROFILES.md`, the provider-specific support record, architecture, conformance, compatibility, and runbook content |
 | Security behavior | Threat model, conformance scenario, and relevant ADR |
 | Agent provider authentication, entitlement, or billing behavior | `docs/SUBSCRIPTION_AUTH.md`, architecture, compatibility matrix, conformance scenario, and relevant ADR |
 | User-visible capability | Product model, acceptance criteria, and project log |

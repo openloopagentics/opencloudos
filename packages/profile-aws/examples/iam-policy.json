@@ -1,0 +1,41 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OpenCloudOSArtifacts",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::REPLACE_ARTIFACT_BUCKET/opencloudos/*"
+    },
+    {
+      "Sid": "OpenCloudOSControlMetadata",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem"
+      ],
+      "Resource": "arn:aws:dynamodb:REPLACE_REGION:REPLACE_ACCOUNT_ID:table/REPLACE_METADATA_TABLE"
+    },
+    {
+      "Sid": "OpenCloudOSSealedSecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:CreateSecret",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:TagResource"
+      ],
+      "Resource": "arn:aws:secretsmanager:REPLACE_REGION:REPLACE_ACCOUNT_ID:secret:opencloudos/*"
+    },
+    {
+      "Sid": "OpenCloudOSTelemetry",
+      "Effect": "Allow",
+      "Action": "logs:PutLogEvents",
+      "Resource": "arn:aws:logs:REPLACE_REGION:REPLACE_ACCOUNT_ID:log-group:/aws/opencloudos/profile:log-stream:*"
+    }
+  ]
+}

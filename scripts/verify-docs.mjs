@@ -15,6 +15,7 @@ function fail(message) {
 const requiredRecords = [
   "CONTEXT.md",
   "docs/ARCHITECTURE.md",
+  "docs/AWS_PROFILE.md",
   "docs/CODEX_ADAPTER_SPIKE.md",
   "docs/CODEX_RUNNER_TRANSPORT.md",
   "docs/CODEX_RUNNER_SUPERVISOR.md",
@@ -113,11 +114,22 @@ for (let scenario = 1; scenario <= 11; scenario += 1) {
   if (!profileTests.includes(id)) fail(`${id} is missing from the executable Deployment Profile suite`);
 }
 
+const awsProfile = read("docs/AWS_PROFILE.md");
+const awsProfileTests = read("packages/profile-aws/test/aws-profile.test.ts");
+for (let scenario = 1; scenario <= 6; scenario += 1) {
+  const id = `AWS-${String(scenario).padStart(3, "0")}`;
+  if (!awsProfile.includes(id)) fail(`${id} is missing from docs/AWS_PROFILE.md`);
+  if (!awsProfileTests.includes(id)) fail(`${id} is missing from the executable AWS Profile suite`);
+}
+
 if (!read("docs/PROJECT_LOG.md").includes("Provider Runtime Broker")) {
   fail("Project Log does not record the Provider Runtime Broker implementation");
 }
 if (!read("docs/PROJECT_LOG.md").includes("Deployment Profile SDK")) {
   fail("Project Log does not record the Deployment Profile SDK implementation");
+}
+if (!read("docs/PROJECT_LOG.md").includes("AWS EKS profile implemented")) {
+  fail("Project Log does not record the AWS EKS profile implementation");
 }
 
 if (failures.length > 0) {
@@ -126,5 +138,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, 8 CODEX scenarios, 8 RUNNER scenarios, 8 SUPERVISOR scenarios, and 11 PROFILE scenarios verified`,
+  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, 8 CODEX scenarios, 8 RUNNER scenarios, 8 SUPERVISOR scenarios, 11 PROFILE scenarios, and 6 AWS scenarios verified`,
 );

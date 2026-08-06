@@ -32,6 +32,7 @@ const navItems: NavItem[] = [
   { id: "validation", label: "Conformance suite", group: "Records", keywords: "tests differential isolation recovery" },
   { id: "governance", label: "Documentation policy", group: "Records", keywords: "wiki pull request project log source of truth" },
   { id: "project-log", label: "Project log", group: "Records", keywords: "history shipped research plan" },
+  { id: "aws-profile", label: "AWS EKS profile", group: "Operate", keywords: "aws eks s3 dynamodb secrets manager efs cognito cloudwatch iam rbac" },
   { id: "providers", label: "Provider matrix", group: "Operate", keywords: "aws gcp azure self hosted" },
   { id: "risks", label: "Risks & open questions", group: "Operate", keywords: "name trademark upstream storage websocket" },
   { id: "sources", label: "Primary sources", group: "Operate", keywords: "references documentation github" },
@@ -202,7 +203,7 @@ export function Wiki() {
         <WikiSection id="brief">
           <div className="hero-grid">
             <div className="hero-copy">
-              <div className="release-pill"><span /> Architecture + execution · v0.8</div>
+              <div className="release-pill"><span /> Architecture + execution · v0.9</div>
               <h1>A portable operating system for <em>agentic work.</em></h1>
               <p className="hero-lede">
                 A technical blueprint for taking Cloudflare OS beyond one provider—without losing the Gadget model,
@@ -450,7 +451,7 @@ export function Wiki() {
             <article><div className="test-status">V1 IMPLEMENTED</div><h3>Registry + discovery</h3><p>Frozen manifests, protocol and capability versions, architecture support, defensive discovery, and duplicate rejection.</p></article>
             <article><div className="test-status">7 CONTRACTS</div><h3>Portable capabilities</h3><p>Artifacts, sealed secrets, Credential Capsules, metadata, identity, workload runtime, and telemetry.</p></article>
             <article><div className="test-status">11 / 11 PASS</div><h3>PROFILE conformance</h3><p>Configuration, isolation, fencing, idempotence, capsule destruction, migrations, rollback, and teardown.</p></article>
-            <article><div className="test-status">SYNTHETIC ONLY</div><h3>Production profiles</h3><p>No AWS, GCP, Azure, or self-hosted adapter is supported yet. The first real target is Kubernetes/self-hosted.</p></article>
+            <article><div className="test-status">AWS EXPERIMENTAL</div><h3>First cloud package</h3><p>All seven AWS/EKS drivers use real service bindings and pass deterministic conformance. Live-account qualification is still required before support.</p></article>
           </div>
           <div className="mapping-table" role="table" aria-label="Deployment profile capability mapping">
             <div className="mapping-head" role="row"><span>Profile capability</span><span>Cloud examples</span><span>Non-negotiable behavior</span></div>
@@ -458,7 +459,7 @@ export function Wiki() {
               ["Artifact Store", "S3 · GCS · Blob · MinIO", "Immutable digest + tenant scope"],
               ["Secret Store", "Secrets Manager · Secret Manager · Key Vault · Vault", "Seal and bind; no read/export Interface"],
               ["Credential Capsule", "Encrypted dedicated volume/binding", "Mount · seal · destroy with generation fencing"],
-              ["Control Metadata", "Managed PostgreSQL · PostgreSQL", "Compare-and-swap conflicts"],
+              ["Control Metadata", "DynamoDB · managed PostgreSQL", "Strong compare-and-swap conflicts"],
               ["Workload Runtime", "EKS · GKE · AKS · Kubernetes", "Idempotent desired state + stale-generation rejection"],
               ["Identity + Telemetry", "OIDC/workload identity · OTLP", "Normalized outputs without provider credentials"],
             ].map(([capability, examples, behavior]) => <div className="mapping-row" role="row" key={capability}><strong>{capability}</strong><code>{examples}</code><span>{behavior}</span></div>)}
@@ -475,7 +476,7 @@ export function Wiki() {
           </div>
           <div className="callout callout-warning"><span className="callout-icon">!</span><div><strong>GCS is not a live credential filesystem</strong><p>S3, GCS, and Blob Storage map to immutable artifacts and encrypted backups. The official agent client receives a separate mutable, isolated Credential Capsule attachment inside its Provider Runner workload.</p></div></div>
           <div className="security-rule"><span>EXTENSION RULE</span><strong>Profiles are pinned privileged packages loaded by the operator—never code downloaded from a request, Workspace, Gadget, or manifest URL.</strong></div>
-          <p className="source-note">Complete authoring, lifecycle, capability, migration, cloud mapping, and PROFILE-001–011 contract: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Deployment Profile SDK</ExternalLink>.</p>
+          <p className="source-note">Complete authoring, lifecycle, capability, migration, cloud mapping, and PROFILE-001–011 contract: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Deployment Profile SDK</ExternalLink> · <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/AWS_PROFILE.md">AWS profile operations</ExternalLink>.</p>
         </WikiSection>
 
         <WikiSection id="security">
@@ -568,7 +569,7 @@ export function Wiki() {
             ].map(([phase, title, timing, body]) => <article key={phase}><div className="phase-number">P{phase}</div><div><span>{timing}</span><h3>{title}</h3><p>{body}</p></div></article>)}
           </div>
           <div className="callout callout-warning"><span className="callout-icon">?</span><div><strong>First program gate</strong><p>Do not fund the distributed control plane until Milestone 1 proves that standalone workerd can preserve the required persistence, isolation, RPC, and recovery semantics.</p></div></div>
-          <div className="callout"><span className="callout-icon">✓</span><div><strong>M0 execution update</strong><p>The Broker, Codex auth/transport/supervisor contracts, and Deployment Profile SDK v1 now have executable synthetic conformance. Real isolated runners and production cloud profiles remain the next evidence gates; Anthropic approval remains unsent.</p><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/EXECUTION_PLAN.md">Current execution plan</ExternalLink></div></div>
+          <div className="callout"><span className="callout-icon">✓</span><div><strong>M0 execution update</strong><p>The Broker, Codex auth/transport/supervisor contracts, Deployment Profile SDK, and experimental AWS EKS package now have executable conformance. Real isolated runners and live-cloud qualification remain the next evidence gates; Anthropic approval remains unsent.</p><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/EXECUTION_PLAN.md">Current execution plan</ExternalLink></div></div>
         </WikiSection>
 
         <WikiSection id="workstreams">
@@ -641,6 +642,8 @@ export function Wiki() {
               "Implement bounded app-server stdio transport and RUNNER-001–008",
               "Implement capsule-bound supervisor contract and SUPERVISOR-001–008",
               "Implement Deployment Profile SDK and PROFILE-001–011",
+              "Implement experimental AWS EKS profile and AWS-001–006",
+              "Qualify AWS in an ephemeral account with repeatable IaC",
               "Build real local app-server runtime and encrypted capsule drivers",
               "Build first real self-hosted/Kubernetes Deployment Profile",
               "Map Codex thread/turn events and explicit approval bridge",
@@ -706,6 +709,7 @@ export function Wiki() {
               ["ADR-0009", "Use local stdio and reject unbound provider requests", "Proposed"],
               ["ADR-0010", "Bind one runner generation and capsule to one Provider Connection", "Proposed"],
               ["ADR-0011", "Use operator-installed profiles with versioned capability contracts", "Proposed"],
+              ["ADR-0012", "Use EKS and AWS-native data services for the first AWS profile", "Proposed"],
             ].map(([id, title, status]) => <div key={id}><code>{id}</code><strong>{title}</strong><span>{status}</span></div>)}
           </div>
           <p className="source-note">Review full rationale and consequences in the <ExternalLink href="https://github.com/openloopagentics/opencloudos/tree/main/docs/adr">ADR registry</ExternalLink>.</p>
@@ -742,6 +746,7 @@ export function Wiki() {
               ["ARCHITECTURE.md", "Owns modules, interfaces, invariants, state, flows, and failure behavior"],
               ["EXECUTION_PLAN.md", "Owns workstreams, milestones, dependencies, risk, and release gates"],
               ["DEPLOYMENT_PROFILES.md", "Owns profile loading, capabilities, configuration, reconciliation, migrations, and PROFILE scenarios"],
+              ["AWS_PROFILE.md", "Owns AWS bootstrap, IAM/RBAC, configuration, lifecycle, recovery, cost, and promotion gates"],
               ["SUBSCRIPTION_AUTH.md", "Owns agent-provider authentication, billing authority, policy gates, and AUTH scenarios"],
               ["PROVIDER_COMPATIBILITY.md", "Owns time-sensitive provider support, client pin, evidence, and approval state"],
               ["PROJECT_LOG.md", "Owns the chronological record of material work"],
@@ -768,6 +773,7 @@ export function Wiki() {
             A chronological, append-only view of material research, design, implementation, and operational changes.
           </SectionHeading>
           <div className="project-timeline">
+            <article><div><span>06 AUG 2026</span><i>Shipped experimental AWS profile</i></div><h3>AWS now implements all seven portable capabilities</h3><p>Added real S3, Secrets Manager, DynamoDB, Cognito, CloudWatch Logs, EKS Deployment, and EFS CSI PVC bindings. Provider Runners require a mounted capsule; durable metadata and Kubernetes annotations fence generations.</p><footer>Evidence · 11/11 PROFILE scenarios on AWS fakes · AWS-001–006 · real SDK command seam · no AWS account or resource · live qualification next</footer></article>
             <article><div><span>06 AUG 2026</span><i>Shipped extension protocol</i></div><h3>Multi-cloud variation made an executable Deployment Profile SDK</h3><p>Implemented trusted profile registration, strict redacted configuration, seven capability drivers, generation-fenced reconciliation, checkpointed migrations, a synthetic full profile, and reusable PROFILE conformance. GCS/S3/Blob artifacts remain separate from live Credential Capsules.</p><footer>Evidence · 11/11 PROFILE scenarios · 21 profile tests · no cloud SDK · no resource or credential · real Kubernetes profile next</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped supervisor contract</i></div><h3>Codex runner lifecycle bound to one user and capsule</h3><p>Implemented exact secret-free manifest pins, hidden ownership, initialization health, serialized starts, crash generation fencing, explicit recovery, graceful and forced stop, and irreversible capsule destruction behind provider-neutral runtime drivers.</p><footer>Evidence · 8/8 SUPERVISOR scenarios · 41 total tests · no process spawn · no encrypted capsule · real local driver next</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped transport slice</i></div><h3>Codex Provider Runner transport made fail-closed</h3><p>Implemented bounded stdio JSONL correlation and Node stream framing. Eight RUNNER scenarios cover out-of-order responses, notifications, redacted errors, malformed input, unknown IDs, fragmented frames, resource bounds, and fixed rejection of server-initiated approvals.</p><footer>Evidence · 8/8 RUNNER tests · no process spawn · no account access · no automatic approval · now consumed by supervisor contract</footer></article>
@@ -782,24 +788,63 @@ export function Wiki() {
           <p className="source-note">Append future entries in <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/PROJECT_LOG.md">PROJECT_LOG.md</ExternalLink>.</p>
         </WikiSection>
 
+        <WikiSection id="aws-profile">
+          <SectionHeading eyebrow="21 · AWS implementation" title="AWS support exists—behind an explicit experimental gate">
+            Profile <code>aws-eks</code> implements protocol v1 without adding AWS branches to core. The package is usable for engineering qualification, not a production support claim.
+          </SectionHeading>
+          <div className="test-grid auth-status-grid">
+            <article><div className="test-status">7 / 7 DRIVERS</div><h3>Complete profile surface</h3><p>S3 artifacts, Secrets Manager, EFS capsules, DynamoDB metadata, Cognito identity, EKS workloads, and CloudWatch Logs.</p></article>
+            <article><div className="test-status">DOUBLE FENCE</div><h3>Restart-safe generations</h3><p>DynamoDB conditional records and Kubernetes generation/hash annotations both reject stale reconciliation.</p></article>
+            <article><div className="test-status">CAPSULE FIRST</div><h3>Runner isolation</h3><p>A Provider Runner cannot start until its Tenant-scoped EFS CSI PVC Credential Capsule is mounted.</p></article>
+            <article><div className="test-status">NOT SUPPORTED YET</div><h3>Evidence boundary</h3><p>Deterministic AWS/EKS fakes pass. IAM, networking, failure recovery, cleanup, cost, and quotas still need live-account proof.</p></article>
+          </div>
+          <div className="mapping-table" role="table" aria-label="AWS profile service mapping">
+            <div className="mapping-head" role="row"><span>Portable capability</span><span>AWS service</span><span>Safety mechanism</span></div>
+            {[
+              ["Artifact Store", "Amazon S3", "SHA-256 + If-None-Match conditional put"],
+              ["Secret Store", "AWS Secrets Manager", "Binary versions + opaque binding + tombstone-first delete"],
+              ["Credential Capsule", "EKS + EFS CSI PVC", "Dedicated attachment; delete workload before seal/destroy"],
+              ["Control Metadata", "Amazon DynamoDB", "Strong reads + conditional PutItem + monotonic tombstones"],
+              ["Identity", "Amazon Cognito", "Verified ID token → Tenant/User/groups/expiry"],
+              ["Workload Runtime", "EKS Deployment", "Digest-pinned restricted Pod + namespace RBAC"],
+              ["Telemetry", "CloudWatch Logs", "Bounded sorted batches; credential-shaped keys rejected"],
+            ].map(([capability, service, mechanism]) => <div className="mapping-row" role="row" key={capability}><strong>{capability}</strong><code>{service}</code><span>{mechanism}</span></div>)}
+          </div>
+          <div className="flow-line">
+            {[
+              ["01", "Bootstrap", "EKS · EFS CSI · S3 · DynamoDB · logs · Cognito"],
+              ["02", "Authorize", "Controller Pod Identity + narrow namespace RBAC"],
+              ["03", "Capsule", "Create and bind one PVC before a Provider Runner"],
+              ["04", "Workload", "Apply one digest and generation to EKS"],
+              ["05", "Recover", "Read DynamoDB fence and compare EKS annotations"],
+              ["06", "Promote", "Live conformance · DR · security · cost · clean operator"],
+            ].map(([number, title, body]) => <article key={number}><span>{number}</span><strong>{title}</strong><p>{body}</p></article>)}
+          </div>
+          <div className="callout callout-warning"><span className="callout-icon">!</span><div><strong>Experimental means no production promise</strong><p>The package does not create an AWS environment. Dynamic EFS capsules require Linux EC2 nodes, the EFS CSI add-on, separate CSI IAM, explicit egress, and tested destruction/recovery. No live AWS account has run the suite yet.</p></div></div>
+          <div className="callout"><span className="callout-icon">i</span><div><strong>Published v0.1 gaps</strong><p>Secret bindings are verified but not yet injectable through WorkloadDesiredState; policy references label workloads but do not create policies; endpoint references identify Deployments, not exposed app-server transports; and Deployment availability does not replace supervisor initialization health.</p></div></div>
+          <div className="security-rule"><span>AWS RULE</span><strong>AWS access comes from the controller's default credential chain—prefer EKS Pod Identity. Access keys, session tokens, Cognito tokens, and official-client credentials are never profile configuration.</strong></div>
+          <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/AWS_PROFILE.md">Read bootstrap, every field, IAM/RBAC, lifecycle, recovery, cost, evidence, and promotion gates</ExternalLink>.</p>
+        </WikiSection>
+
         <WikiSection id="providers">
           <SectionHeading eyebrow="12 · Deployment" title="Provider matrix">
-            All four columns now target the same protocol v1 capability contracts. They remain planned until real-resource conformance and runbooks pass.
+            All four columns target protocol v1. AWS now has an experimental package; every column remains unsupported until its own real-resource conformance and operator gates pass.
           </SectionHeading>
           <div className="provider-table">
             <div className="provider-head"><span>Capability</span><span>AWS</span><span>GCP</span><span>Azure</span><span>Self-hosted</span></div>
             {[
               ["Compute", "EKS", "GKE", "AKS", "Kubernetes"],
-              ["Metadata", "RDS Postgres", "Cloud SQL", "Azure Postgres", "PostgreSQL"],
+              ["Profile metadata", "DynamoDB", "Cloud SQL / native CAS TBD", "Azure Postgres / native CAS TBD", "PostgreSQL"],
               ["Objects", "S3", "GCS", "Blob Storage", "MinIO"],
               ["Secrets", "Secrets Manager", "Secret Manager", "Key Vault", "Vault"],
-              ["Capsules", "Encrypted runner volume", "Encrypted runner volume", "Encrypted runner volume", "Encrypted dedicated volume"],
+              ["Capsules", "EFS CSI PVC", "Encrypted runner volume", "Encrypted runner volume", "Encrypted dedicated volume"],
               ["Ingress", "ALB / NLB", "Cloud Load Balancing", "App Gateway", "Ingress controller"],
-              ["Telemetry", "OTLP exporter", "OTLP exporter", "OTLP exporter", "OTel Collector"],
+              ["Telemetry", "CloudWatch Logs (v0.1)", "OTLP exporter", "OTLP exporter", "OTel Collector"],
+              ["Status", "Experimental code", "Planned", "Planned", "Planned"],
             ].map((row) => <div className="provider-row" key={row[0]}>{row.map((cell, index) => index === 0 ? <strong key={cell}>{cell}</strong> : <span key={cell}>{cell}</span>)}</div>)}
           </div>
           <p className="table-caption">Provider services are deployment profiles. Core application packages must not import provider SDKs.</p>
-          <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Read the Deployment Profile SDK and author checklist</ExternalLink>.</p>
+          <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Read the Deployment Profile SDK and author checklist</ExternalLink> · <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/AWS_PROFILE.md">AWS support record</ExternalLink>.</p>
         </WikiSection>
 
         <WikiSection id="risks">
@@ -814,6 +859,7 @@ export function Wiki() {
               ["High", "Experimental Codex Interface", "Can pinned app-server schema drift be detected before it changes login, limit, logout, or turn behavior?"],
               ["High", "Orphan runner recovery", "Can a restarted host reconcile processes, capsule mounts, and durable generations without two active owners or silent credential loss?"],
               ["High", "Profile protocol drift", "Will the first two real profiles expose capability or lifecycle differences that require protocol v2 before stability?"],
+              ["High", "AWS live qualification", "Will EFS cleanup, Pod/node loss, throttling, IAM, egress, backup/restore, quotas, and cost match the deterministic profile contract?"],
               ["High", "Claude provider approval", "Will Anthropic approve Claude.ai login and subscription rate limits for this third-party distribution?"],
               ["High", "WebSocket recovery", "What session state must survive pod replacement versus reconnect from the browser?"],
               ["High", "Upstream velocity", "How much runtime coupling will new Cloudflare OS releases add?"],
@@ -843,13 +889,18 @@ export function Wiki() {
               ["Codex Provider Runner transport", "Bounded stdio JSONL framing, correlation, redacted failures, default server-request rejection, and remaining isolation work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_TRANSPORT.md"],
               ["Codex Provider Runner supervisor", "Owner binding, exact pins, initialization health, generation fencing, lifecycle, synthetic conformance, and remaining real-driver work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_SUPERVISOR.md"],
               ["Deployment Profile SDK", "Operator-installed extension protocol, seven capabilities, cloud mapping, migrations, synthetic profile, and PROFILE conformance", "https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md"],
+              ["AWS EKS profile", "Implemented service mapping, configuration, IAM/RBAC, lifecycle, recovery, cost, limitations, and promotion gate", "https://github.com/openloopagentics/opencloudos/blob/main/docs/AWS_PROFILE.md"],
+              ["Amazon EKS Pod Identity", "Default-chain AWS credentials for workloads without static keys", "https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html"],
+              ["Amazon EFS CSI on EKS", "Mutable persistent filesystem and dynamic provisioning constraints", "https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html"],
+              ["S3 PutObject", "Conditional immutable creation and checksum behavior", "https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html"],
+              ["Cognito JWT verification", "Signature, issuer, expiry, token use, and audience validation", "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html"],
               ["Claude Code authentication", "Subscription login, credential storage, precedence, expiry, and setup-token", "https://code.claude.com/docs/en/authentication"],
               ["Claude Agent SDK overview", "Third-party Claude.ai login and subscription-limit approval requirement", "https://code.claude.com/docs/en/agent-sdk/overview"],
               ["Claude Agent SDK subscription update", "Current time-sensitive treatment of third-party subscription usage", "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan"],
               ["Agent Provider compatibility record", "Current implementation, official paths, policy state, and evidence gaps", "https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md"],
             ].map(([title, note, href], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><ExternalLink href={href}>{title}</ExternalLink><p>{note}</p></div></article>)}
           </div>
-          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.8 · August 6, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
+          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.9 · August 6, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
         </WikiSection>
       </main>
     </div>

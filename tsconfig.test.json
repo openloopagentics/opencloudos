@@ -13,6 +13,8 @@
   "include": [
     "packages/deployment-profile-sdk/src/**/*.ts",
     "packages/deployment-profile-sdk/test/**/*.ts",
+    "packages/profile-aws/src/**/*.ts",
+    "packages/profile-aws/test/**/*.ts",
     "packages/provider-runtime-broker/src/**/*.ts",
     "packages/provider-runtime-broker/test/**/*.ts"
   ]

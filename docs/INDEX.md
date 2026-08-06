@@ -8,6 +8,7 @@ The public [architecture wiki](https://openloopagentics.github.io/opencloudos/) 
 - [System architecture](./ARCHITECTURE.md) — modules, state ownership, flows, and failure semantics
 - [Execution plan](./EXECUTION_PLAN.md) — workstreams, milestones, backlog, and release gates
 - [Deployment Profile SDK](./DEPLOYMENT_PROFILES.md) — extension protocol, capabilities, configuration, reconciliation, migrations, cloud mapping, and PROFILE conformance
+- [AWS EKS Deployment Profile](./AWS_PROFILE.md) — experimental AWS capability mapping, bootstrap, IAM/RBAC, lifecycle, recovery, cost, and promotion gates
 - [Subscription-backed agent providers](./SUBSCRIPTION_AUTH.md) — Claude/Codex connection design, policy gates, isolation, and conformance
 - [Codex app-server authentication spike](./CODEX_ADAPTER_SPIKE.md) — pinned auth protocol, sanitizer boundary, executable fixtures, and remaining production gates
 - [Codex Provider Runner transport](./CODEX_RUNNER_TRANSPORT.md) — bounded stdio JSONL framing, correlation, failure semantics, and fail-closed server requests

@@ -49,7 +49,8 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 |---|---|---|
 | M0 documentation control | Implemented | CI runs contract, documentation-integrity, material-change, type, and wiki build checks |
 | Deployment Profile SDK | Protocol v1 implemented | Registry, seven capability contracts, config validation, generation-fenced reconciliation, checkpointed migrations, synthetic full profile, and PROFILE-001–011 |
-| AWS / GCP / Azure / self-hosted profiles | Not implemented | Build self-hosted/Kubernetes first; protocol remains provisional until two materially different profiles pass real-resource conformance |
+| AWS profile | Experimental implementation | All seven drivers and real AWS/EKS bindings pass deterministic PROFILE/AWS suites; next gate is repeatable IaC and ephemeral-account conformance |
+| GCP / Azure / self-hosted profiles | Not implemented | Build self-hosted/Kubernetes next; protocol remains provisional until two materially different profiles pass real-resource conformance |
 | WS9 provider-neutral Broker | Implemented | Interface, policy registry, in-memory metadata store, normalized events, audit sink, and synthetic Adapter |
 | AUTH-001 through AUTH-010 | Passing on synthetic target | Ten deterministic tests; official-provider and process-isolation targets still required |
 | Anthropic approval package | Drafted, not sent | Maintainer must assign owner, review scope, and send through an approved channel |
@@ -415,15 +416,17 @@ These issues are ordered to reduce uncertainty rather than maximize visible feat
 19. Port the GitHub Gatekeeper through Capability Broker semantics.
 20. Implement prepared-action and approval state machines.
 21. Add the Audit Ledger and privileged fail-closed behavior.
-22. Build the first real self-hosted/Kubernetes Deployment Profile and run PROFILE-001–011.
-23. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
-24. Define Placement Registry schema and property tests for lease epochs.
-25. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
-26. Build Shard Controller and Helm alpha.
-27. Add shard fault injection and TB-005.
-28. Add AWS, GCP, and Azure profiles one at a time behind the same tests.
-29. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
-30. Run release-candidate security and operator validation.
+22. **Implemented experimental adapter:** add the full AWS EKS profile and pass PROFILE-001–011 plus AWS-001–006 against deterministic AWS/EKS fakes.
+23. Build repeatable isolated-account AWS IaC and run the live qualification, recovery, security, cost, and operator gates before changing its support label.
+24. Build the first real self-hosted/Kubernetes Deployment Profile and run PROFILE-001–011.
+25. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
+26. Define Placement Registry schema and property tests for lease epochs.
+27. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
+28. Build Shard Controller and Helm alpha.
+29. Add shard fault injection and TB-005.
+30. Add GCP and Azure profiles one at a time behind the same tests.
+31. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
+32. Run release-candidate security and operator validation.
 
 ## Release gates
 

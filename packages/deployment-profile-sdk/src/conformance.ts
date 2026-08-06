@@ -227,6 +227,15 @@ export async function runDeploymentProfileConformance(
   await capabilityScenario("PROFILE-008", "workload_runtime", "workload generations fence stale reconciliation", async () => {
     const driver = handle?.drivers.workloadRuntime;
     if (!driver) throw new Error("runtime driver unavailable");
+    const capsuleDriver = handle?.drivers.credentialCapsule;
+    if (capsuleDriver) {
+      await capsuleDriver.reconcile(options.scopeA, {
+        capsuleRef: "capsule:workload-conformance",
+        workloadRef: "workload:conformance",
+        generation: 2,
+        storagePolicyRef: "policy:capsule-storage",
+      });
+    }
     const desired = {
       workloadRef: "workload:conformance",
       kind: "provider_runner" as const,
@@ -243,6 +252,7 @@ export async function runDeploymentProfileConformance(
     const stopped = await driver.destroy(options.scopeA, desired.workloadRef, 3);
     if (stopped.state !== "stopped" || stopped.observedGeneration !== 3) throw new Error("workload did not stop");
     await rejectsWith(() => driver.reconcile(options.scopeA, { ...desired, generation: 3 }), DeploymentGenerationConflictError);
+    if (capsuleDriver) await capsuleDriver.destroy(options.scopeA, "capsule:workload-conformance", 4);
   });
 
   await scenario("PROFILE-009", "profile reconciliation is idempotent and generation-fenced", async () => {
@@ -267,7 +277,7 @@ export async function runDeploymentProfileConformance(
     if (!driver) throw new Error("credential capsule driver unavailable");
     const desired = {
       capsuleRef: "capsule:conformance",
-      workloadRef: "workload:conformance",
+      workloadRef: "workload:capsule-conformance",
       generation: 2,
       storagePolicyRef: "policy:capsule-storage",
     };

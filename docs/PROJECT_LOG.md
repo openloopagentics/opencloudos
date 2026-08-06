@@ -2,6 +2,42 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-06 — AWS EKS profile implemented behind the common protocol
+
+**Status:** experimental implementation shipped; live AWS qualification not run; not production-supported
+
+Implemented `packages/profile-aws` as the first real cloud package using the unchanged Deployment Profile v1 extension point.
+
+Behavior implemented:
+
+- S3 Artifact Store verifies SHA-256, uses conditional `If-None-Match` creation, hashes Tenant/reference keys, detects immutable conflicts, and re-verifies reads;
+- Secrets Manager stores binary versions, exposes only opaque bindings, tombstones before force deletion, zeroes the SDK-call copy, and uses a new physical name after destruction;
+- DynamoDB strongly consistent reads and conditional writes persist tenant-scoped Control Metadata, generation fences, links, and monotonic tombstones;
+- an in-cluster EKS controller reconciles digest-pinned restricted Deployments and EFS CSI PVC Credential Capsules through namespace-scoped Kubernetes RBAC;
+- Provider Runner reconciliation fails closed until its one capsule is mounted, and both DynamoDB records and Kubernetes annotations fence generation/desired hash;
+- Cognito ID tokens normalize `custom:tenant_id`, subject, groups, and expiry after signature/pool/client verification;
+- CloudWatch Logs receives timestamp-sorted bounded batches and rejects credential-shaped attribute names;
+- profile close tears down AWS and Kubernetes clients and leaves retained driver references unusable.
+
+Architecture and operations decisions:
+
+- EKS preserves the common Kubernetes workload substrate; ECS/Fargate was not introduced as a second scheduler;
+- EFS CSI is the mutable capsule store; S3 remains immutable artifact/backup storage;
+- DynamoDB owns only AWS-profile generation/CAS state, not future product Tenant/Workspace/audit metadata;
+- AWS credentials come from the default SDK chain, with controller Pod Identity preferred; profile config contains no credentials;
+- v0.1.0 assumes pre-provisioned EKS/EFS, S3, DynamoDB, CloudWatch, and Cognito resources;
+- the support label stays `experimental` until ephemeral-account conformance, failure/recovery drills, security review, cost/quota/SLO work, and clean-operator validation pass.
+
+Verification:
+
+- AWS-001 through AWS-006 pass;
+- the AWS profile passes PROFILE-001 through PROFILE-011 against deterministic AWS/EKS fakes;
+- the AWS SDK command seam proves S3 precondition/checksum input, DynamoDB strong reads/conditional writes, Secrets Manager binary input, and CloudWatch batch input;
+- the generic PROFILE-008 flow now creates a capsule before a Provider Runner when both capabilities exist;
+- no AWS account, credential, resource, Cognito token, EKS cluster, EFS volume, or production Provider Runner was used.
+
+Related decision: ADR-0012. Detailed bootstrap, configuration, IAM/RBAC, lifecycle, recovery, cost, limitations, and promotion gates: `docs/AWS_PROFILE.md`.
+
 ## 2026-08-06 — Multi-cloud variation made an executable profile protocol
 
 **Status:** shipped protocol v1 and synthetic conformance; no production cloud profile implemented

@@ -15,3 +15,4 @@ ADRs record hard-to-reverse tradeoffs. Their status is reflected in the public w
 | [0009](./0009-use-local-stdio-and-reject-unbound-provider-requests.md) | Use local stdio and reject unbound provider requests | Proposed |
 | [0010](./0010-bind-runner-generation-and-capsule-to-provider-connection.md) | Bind one runner generation and capsule to one Provider Connection | Proposed |
 | [0011](./0011-use-operator-installed-deployment-profiles.md) | Use operator-installed deployment profiles with versioned capability contracts | Proposed |
+| [0012](./0012-use-eks-and-aws-native-data-services-for-the-first-aws-profile.md) | Use EKS and AWS-native data services for the first AWS profile | Proposed |

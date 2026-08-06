@@ -1,6 +1,6 @@
 # Deployment Profile SDK
 
-**Implementation status:** protocol v1, registry, configuration validator, capability contracts, reconciler wrapper, migration executor, synthetic full-profile Implementation, and PROFILE-001 through PROFILE-011 conformance are implemented. AWS, GCP, Azure, Kubernetes, and self-hosted production profiles are not implemented.
+**Implementation status:** protocol v1, registry, configuration validator, capability contracts, reconciler wrapper, migration executor, synthetic full-profile implementation, and PROFILE-001 through PROFILE-011 conformance are implemented. The `aws-eks` profile implements all seven capabilities with real AWS SDK/in-cluster EKS bindings and passes deterministic conformance, but remains experimental until live-resource, recovery, security, cost, and operator gates pass. GCP, Azure, Kubernetes, and self-hosted production profiles are not implemented.
 
 ## Purpose
 
@@ -114,10 +114,10 @@ The exact services are profile decisions, but the contract mapping is fixed:
 | Artifact store | S3 adapter | GCS adapter | Blob Storage adapter | MinIO/filesystem adapter |
 | Secret store | Secrets Manager adapter | Secret Manager adapter | Key Vault adapter | Vault adapter |
 | Credential Capsule | Encrypted per-runner volume/binding | Encrypted per-runner volume/binding | Encrypted per-runner volume/binding | Encrypted dedicated volume/binding |
-| Control metadata | PostgreSQL-compatible managed database | PostgreSQL-compatible managed database | PostgreSQL-compatible managed database | PostgreSQL |
+| Control metadata | DynamoDB for profile generation/CAS state; PostgreSQL remains product metadata | PostgreSQL-compatible managed database | PostgreSQL-compatible managed database | PostgreSQL |
 | Workload runtime | EKS workload adapter | GKE workload adapter | AKS workload adapter | Kubernetes/local runtime adapter |
 | Identity | Configured OIDC/workload identity adapter | Configured OIDC/workload identity adapter | Configured OIDC/workload identity adapter | Generic OIDC/local adapter |
-| Telemetry | OTLP exporter | OTLP exporter | OTLP exporter | OpenTelemetry Collector |
+| Telemetry | CloudWatch Logs in experimental v0.1; OTLP remains the portability target | OTLP exporter | OTLP exporter | OpenTelemetry Collector |
 
 Cloud service names and support claims remain profile compatibility data, not constants in core code.
 
@@ -156,6 +156,10 @@ The reusable harness reports normalized pass/fail/skip results and never include
 
 The included `synthetic-conformance` profile implements all seven capabilities in memory. It creates no cloud resource, account, credential, process, network connection, or production storage.
 
+The `aws-eks` profile implements the same seven capabilities through S3, Secrets Manager, DynamoDB, Cognito, CloudWatch Logs, EKS Deployments, and EFS CSI PVCs. Its deterministic AWS/EKS target passes PROFILE-001 through PROFILE-011 and AWS-001 through AWS-006. This is implementation evidence, not a production support claim: no live AWS account has run the suite. Configuration, IAM/RBAC, operations, recovery, cost, deviations, and promotion gates are in [AWS EKS Deployment Profile](./AWS_PROFILE.md).
+
+PROFILE-008 creates a Credential Capsule before reconciling its Provider Runner whenever the profile declares both capabilities. This makes the common conformance ordering match the security invariant that an official-client runner never starts without its isolated mutable credential attachment.
+
 ## Author checklist
 
 1. Choose one unique profile ID and semantic version.
@@ -174,7 +178,8 @@ The included `synthetic-conformance` profile implements all seven capabilities i
 ## Remaining implementation
 
 - implement the self-hosted/Kubernetes profile first to prove a real driver set;
-- implement AWS, GCP, and Azure packages without changing core imports;
+- run the AWS package against ephemeral real resources and complete every promotion gate in `docs/AWS_PROFILE.md`;
+- implement GCP and Azure packages without changing core imports;
 - connect the profile registry to application bootstrap and persisted deployment selection;
 - add durable PostgreSQL reconciliation state and controller leader fencing;
 - define real configuration manifests and infrastructure provisioning boundaries;
@@ -183,4 +188,4 @@ The included `synthetic-conformance` profile implements all seven capabilities i
 - publish installation, upgrade, rollback, backup, restore, cost, quota, and deletion runbooks;
 - keep protocol v1 provisional until two materially different production profiles pass.
 
-Related records: [Architecture](./ARCHITECTURE.md), [Execution plan](./EXECUTION_PLAN.md), [Codex runner supervisor](./CODEX_RUNNER_SUPERVISOR.md), [ADR-0006](./adr/0006-provider-variation-through-real-seams.md), and [ADR-0011](./adr/0011-use-operator-installed-deployment-profiles.md).
+Related records: [Architecture](./ARCHITECTURE.md), [Execution plan](./EXECUTION_PLAN.md), [AWS EKS Deployment Profile](./AWS_PROFILE.md), [Codex runner supervisor](./CODEX_RUNNER_SUPERVISOR.md), [ADR-0006](./adr/0006-provider-variation-through-real-seams.md), [ADR-0011](./adr/0011-use-operator-installed-deployment-profiles.md), and [ADR-0012](./adr/0012-use-eks-and-aws-native-data-services-for-the-first-aws-profile.md).

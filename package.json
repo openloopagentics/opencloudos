@@ -10,12 +10,17 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "npm run test:contracts && npm run test:docs && npm run build",
-    "test:contracts": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js .test-dist/packages/provider-runtime-broker/test/*.test.js",
+    "test:contracts": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js .test-dist/packages/profile-aws/test/*.test.js .test-dist/packages/provider-runtime-broker/test/*.test.js",
     "test:broker": "tsc -p tsconfig.test.json && node --test .test-dist/packages/provider-runtime-broker/test/*.test.js",
-    "test:profiles": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js",
+    "test:profiles": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js .test-dist/packages/profile-aws/test/*.test.js",
     "test:docs": "node scripts/verify-docs.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "3.1104.0",
+    "@aws-sdk/client-dynamodb": "3.1104.0",
+    "@aws-sdk/client-s3": "3.1104.0",
+    "@aws-sdk/client-secrets-manager": "3.1104.0",
+    "aws-jwt-verify": "5.2.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },

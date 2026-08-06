@@ -14,6 +14,7 @@ provider profiles, decisions, and chronological project record.
 - [System architecture](./docs/ARCHITECTURE.md)
 - [Execution plan](./docs/EXECUTION_PLAN.md)
 - [Deployment Profile SDK](./docs/DEPLOYMENT_PROFILES.md)
+- [AWS EKS Deployment Profile](./docs/AWS_PROFILE.md)
 - [Subscription-backed agent providers](./docs/SUBSCRIPTION_AUTH.md)
 - [Codex app-server authentication spike](./docs/CODEX_ADAPTER_SPIKE.md)
 - [Codex Provider Runner transport](./docs/CODEX_RUNNER_TRANSPORT.md)
