@@ -17,6 +17,8 @@ const material = changed.filter((file) =>
   file.startsWith("packages/") ||
   file.startsWith("scripts/") ||
   file.startsWith(".github/workflows/") ||
+  file === "LICENSE" ||
+  file === "THIRD_PARTY_NOTICES.md" ||
   file === "package.json" ||
   file === "package-lock.json" ||
   file.startsWith("tsconfig") ||
@@ -30,7 +32,11 @@ if (material.length === 0) {
 
 const exemptionRequested = process.env.DOCS_NOT_NEEDED === "true";
 const exemptionForbidden = material.some((file) =>
-  file.startsWith("packages/") || file.startsWith(".github/workflows/") || file === "package-lock.json",
+  file.startsWith("packages/") ||
+  file.startsWith(".github/workflows/") ||
+  file === "LICENSE" ||
+  file === "THIRD_PARTY_NOTICES.md" ||
+  file === "package-lock.json",
 );
 
 if (exemptionRequested && !exemptionForbidden) {

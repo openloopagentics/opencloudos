@@ -4,16 +4,17 @@ Documentation is part of the OpenCloudOS product and its engineering control sys
 
 ## Sources of truth
 
-1. `CONTEXT.md` owns domain language and relationships.
-2. `docs/adr/` owns hard-to-reverse decisions and their rationale.
-3. `docs/ARCHITECTURE.md` owns current system shape, invariants, state, flows, and failure behavior.
-4. `docs/EXECUTION_PLAN.md` owns milestones, workstreams, sequencing, and exit gates.
-5. `docs/SUBSCRIPTION_AUTH.md` owns agent-provider connection, credential-isolation, billing-authority, and AUTH behavior.
-6. `docs/PROVIDER_COMPATIBILITY.md` owns the time-sensitive provider support and policy matrix.
-7. `docs/DEPLOYMENT_PROFILES.md` owns the profile protocol, capabilities, configuration, reconciliation, migration, cloud mapping, and PROFILE conformance contract.
-8. `docs/AWS_PROFILE.md` owns AWS bootstrap, configuration, IAM/RBAC, service behavior, recovery, cost, limitations, and promotion evidence.
-9. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
-10. The public wiki renders the important parts of these records for readers.
+1. `LICENSE` owns the MIT terms for original project work; `THIRD_PARTY_NOTICES.md` owns the high-level provenance boundary.
+2. `CONTEXT.md` owns domain language and relationships.
+3. `docs/adr/` owns hard-to-reverse decisions and their rationale.
+4. `docs/ARCHITECTURE.md` owns current system shape, invariants, state, flows, and failure behavior.
+5. `docs/EXECUTION_PLAN.md` owns milestones, workstreams, sequencing, and exit gates.
+6. `docs/SUBSCRIPTION_AUTH.md` owns agent-provider connection, credential-isolation, billing-authority, and AUTH behavior.
+7. `docs/PROVIDER_COMPATIBILITY.md` owns the time-sensitive provider support and policy matrix.
+8. `docs/DEPLOYMENT_PROFILES.md` owns the profile protocol, capabilities, configuration, reconciliation, migration, cloud mapping, and PROFILE conformance contract.
+9. `docs/AWS_PROFILE.md` owns AWS bootstrap, configuration, IAM/RBAC, service behavior, recovery, cost, limitations, and promotion evidence.
+10. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
+11. The public wiki renders the important parts of these records for readers.
 
 When code and documentation disagree, the pull request must resolve the disagreement before merge. Neither side silently wins.
 
@@ -28,6 +29,7 @@ When code and documentation disagree, the pull request must resolve the disagree
 | Deployment Profile protocol, driver, or operational behavior | `docs/DEPLOYMENT_PROFILES.md`, the provider-specific support record, architecture, conformance, compatibility, and runbook content |
 | Security behavior | Threat model, conformance scenario, and relevant ADR |
 | Agent provider authentication, entitlement, or billing behavior | `docs/SUBSCRIPTION_AUTH.md`, architecture, compatibility matrix, conformance scenario, and relevant ADR |
+| Project license or imported-source provenance | `LICENSE`, `THIRD_PARTY_NOTICES.md`, architecture, package metadata, relevant ADR, and wiki license section |
 | User-visible capability | Product model, acceptance criteria, and project log |
 | Any merged pull request | `docs/PROJECT_LOG.md` entry or explicit `docs-not-needed` rationale |
 

@@ -17,6 +17,8 @@ The public [architecture wiki](https://openloopagentics.github.io/opencloudos/) 
 - [Anthropic approval request draft](./provider-approval/ANTHROPIC_REQUEST_DRAFT.md) — unsent request and maintainer checklist
 - [Documentation policy](./DOCUMENTATION.md) — the rule that every material change updates the wiki
 - [Project log](./PROJECT_LOG.md) — chronological record of research, decisions, and delivery
+- [MIT License](../LICENSE) — terms for original OpenCloudOS work
+- [Third-party notices](../THIRD_PARTY_NOTICES.md) — upstream and dependency provenance boundary
 
 ## Decisions
 

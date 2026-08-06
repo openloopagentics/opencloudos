@@ -13,6 +13,8 @@ function fail(message) {
 }
 
 const requiredRecords = [
+  "LICENSE",
+  "THIRD_PARTY_NOTICES.md",
   "CONTEXT.md",
   "docs/ARCHITECTURE.md",
   "docs/AWS_PROFILE.md",
@@ -54,7 +56,7 @@ function markdownUnder(relativeDirectory) {
   return found;
 }
 
-const markdownFiles = ["README.md", "CONTEXT.md", ...markdownUnder("docs")];
+const markdownFiles = ["README.md", "THIRD_PARTY_NOTICES.md", "CONTEXT.md", ...markdownUnder("docs")];
 
 for (const relativePath of markdownFiles) {
   const markdown = read(relativePath);
@@ -73,6 +75,18 @@ for (const adrFile of adrFiles) {
   if (!adrIndex.includes(`[${number}]`)) fail(`ADR ${number} is missing from docs/adr/README.md`);
   if (!wiki.includes(`ADR-${number}`)) fail(`ADR ${number} is missing from the public wiki registry`);
 }
+
+const license = read("LICENSE");
+const thirdPartyNotices = read("THIRD_PARTY_NOTICES.md");
+const packageManifest = JSON.parse(read("package.json"));
+const packageLock = JSON.parse(read("package-lock.json"));
+if (!license.startsWith("MIT License\n")) fail("LICENSE does not identify the MIT License");
+if (!license.includes("Permission is hereby granted, free of charge")) fail("LICENSE is missing the canonical MIT grant");
+if (!license.includes('THE SOFTWARE IS PROVIDED "AS IS"')) fail("LICENSE is missing the canonical MIT warranty disclaimer");
+if (packageManifest.license !== "MIT") fail("package.json does not declare SPDX license MIT");
+if (packageLock.packages?.[""]?.license !== "MIT") fail("package-lock.json root package does not declare SPDX license MIT");
+if (!thirdPartyNotices.includes("Apache License 2.0")) fail("Third-party notices do not preserve the Cloudflare OS Apache-2.0 boundary");
+if (!wiki.includes("Original project work is MIT-licensed")) fail("Public wiki does not state the project MIT license boundary");
 
 const subscriptionDesign = read("docs/SUBSCRIPTION_AUTH.md");
 const brokerTests = read("packages/provider-runtime-broker/test/broker.test.ts");
@@ -130,6 +144,9 @@ if (!read("docs/PROJECT_LOG.md").includes("Deployment Profile SDK")) {
 }
 if (!read("docs/PROJECT_LOG.md").includes("AWS EKS profile implemented")) {
   fail("Project Log does not record the AWS EKS profile implementation");
+}
+if (!read("docs/PROJECT_LOG.md").includes("Original project work licensed under MIT")) {
+  fail("Project Log does not record the MIT license decision");
 }
 
 if (failures.length > 0) {

@@ -56,6 +56,13 @@ The workflow in `.github/workflows/pages.yml` builds and publishes the site on
 pushes to `main`. In the repository settings, set **Pages → Source** to
 **GitHub Actions**.
 
+## License
+
+Original work in this repository is licensed under the [MIT License](./LICENSE).
+Cloudflare OS remains under its upstream Apache-2.0 license, and dependencies
+and other third-party materials retain their respective terms. See
+[Third-party notices](./THIRD_PARTY_NOTICES.md) for the provenance boundary.
+
 ## Research snapshot
 
 The current content reflects upstream Cloudflare OS commit

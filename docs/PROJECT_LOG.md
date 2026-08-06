@@ -2,6 +2,26 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-06 — Original project work licensed under MIT
+
+**Status:** shipped
+
+Established the repository's open-source license and made the upstream provenance boundary explicit.
+
+Behavior and records added:
+
+- the root `LICENSE` now contains canonical MIT terms for original work owned by OpenCloudOS contributors;
+- `package.json` and its lockfile declare SPDX identifier `MIT`;
+- `THIRD_PARTY_NOTICES.md` records that Cloudflare OS remains Apache-2.0 and that dependencies retain their own terms;
+- architecture, execution, documentation-policy, README, index, ADR registry, and public wiki now describe the same boundary;
+- documentation CI verifies the root license text, package metadata, provenance notice, wiki entry, ADR, and Project Log together.
+
+This change does not relicense Cloudflare OS, dependencies, assets, or other third-party material. Imported source must retain applicable copyright, attribution, modification, license, and NOTICE requirements, and the naming/trademark question remains separate.
+
+Verification: canonical MIT grant and warranty phrases checked; npm and lockfile metadata checked; documentation integrity, contract tests, TypeScript build, and GitHub Pages publication required.
+
+Related decision: ADR-0013. Primary records: `LICENSE` and `THIRD_PARTY_NOTICES.md`.
+
 ## 2026-08-06 — AWS EKS profile implemented behind the common protocol
 
 **Status:** experimental implementation shipped; live AWS qualification not run; not production-supported

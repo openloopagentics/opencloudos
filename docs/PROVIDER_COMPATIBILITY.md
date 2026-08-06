@@ -1,7 +1,7 @@
 # Agent Provider Compatibility
 
 **Last reviewed:** 2026-08-06
-**Release baseline:** v0.9 M0 execution
+**Release baseline:** v0.10 M0 execution
 **Rule:** this record is time-sensitive. Every stable release revalidates official documentation, provider policy, pinned client behavior, and the AUTH suite.
 
 ## Status vocabulary

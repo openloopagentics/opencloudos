@@ -42,6 +42,7 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | Agent provider access | Per-user Provider Connections through pinned official clients; explicit API-funded fallbacks |
 | Observability | OpenTelemetry / OTLP |
 | Release channels | nightly, preview, stable |
+| Original project license | MIT; upstream and third-party material retains its applicable license and notices |
 
 ## Current execution status
 
@@ -71,6 +72,8 @@ Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PR
 
 **Deliverables:**
 
+- root MIT license and package metadata for original project work;
+- third-party provenance boundary and automated license consistency checks;
 - preserved Apache-2.0 notices and upstream history strategy;
 - pinned upstream commit and workerd version manifest;
 - automated upstream-diff and compatibility report;
@@ -262,7 +265,7 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 **Outcomes:**
 
 - domain language, architecture, execution plan, ADR set, and documentation policy accepted;
-- upstream source strategy and license inventory complete;
+- MIT project license, upstream source strategy, and license inventory complete;
 - monorepo/toolchain direction recorded;
 - initial threat model and conformance scenario catalog;
 - provider-auth support matrix, Anthropic approval request, and ADR-0008 reviewed;

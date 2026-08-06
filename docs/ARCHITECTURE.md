@@ -382,6 +382,19 @@ The first production topology uses one Kubernetes cluster, a replicated PostgreS
 
 Provider-specific infrastructure belongs in deployment profiles. Product, runtime, capability, and conformance modules remain identical across profiles.
 
+## License and provenance boundary
+
+The root MIT License governs original work for which OpenCloudOS contributors hold copyright. It is a repository contribution default, not a claim that every input, dependency, generated artifact, or bundled component is MIT-licensed.
+
+Cloudflare OS remains an Apache-2.0 upstream. Any incorporated upstream source retains its applicable copyright, attribution, modification, license, and NOTICE requirements. Other dependencies and assets retain their own licenses. Release engineering owns the source inventory, `THIRD_PARTY_NOTICES.md`, software bill of materials, provenance, and artifact-level notice assembly needed to keep those terms visible through source and binary redistribution.
+
+**Invariants:**
+
+- project metadata, the root `LICENSE`, the public wiki, and release metadata identify original project work as `MIT`;
+- imported or generated material is classified by origin before it enters a release;
+- no build, packaging, or documentation step strips required upstream notices;
+- the project license never grants rights to third-party trademarks or names.
+
 ## Upgrade strategy
 
 1. Pin the upstream Cloudflare OS commit and workerd compatibility date in release metadata.
@@ -406,3 +419,4 @@ Provider-specific infrastructure belongs in deployment profiles. Product, runtim
 - Revoking a provider connection prevents every new provider turn without deleting workspace history.
 - Every enabled subscription mode is backed by current official documentation and any required written provider approval.
 - Every production change has a current wiki record, verification evidence, and project-log entry.
+- Every release preserves the license and provenance classification of original, upstream, dependency, and generated material.

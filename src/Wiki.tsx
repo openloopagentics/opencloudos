@@ -31,6 +31,7 @@ const navItems: NavItem[] = [
   { id: "decisions", label: "Architecture decisions", group: "Records", keywords: "adr workerd kubernetes active shard" },
   { id: "validation", label: "Conformance suite", group: "Records", keywords: "tests differential isolation recovery" },
   { id: "governance", label: "Documentation policy", group: "Records", keywords: "wiki pull request project log source of truth" },
+  { id: "licensing", label: "License & provenance", group: "Records", keywords: "mit apache license upstream third party notices copyright provenance" },
   { id: "project-log", label: "Project log", group: "Records", keywords: "history shipped research plan" },
   { id: "aws-profile", label: "AWS EKS profile", group: "Operate", keywords: "aws eks s3 dynamodb secrets manager efs cognito cloudwatch iam rbac" },
   { id: "providers", label: "Provider matrix", group: "Operate", keywords: "aws gcp azure self hosted" },
@@ -203,7 +204,7 @@ export function Wiki() {
         <WikiSection id="brief">
           <div className="hero-grid">
             <div className="hero-copy">
-              <div className="release-pill"><span /> Architecture + execution · v0.9</div>
+              <div className="release-pill"><span /> Architecture + execution · v0.10</div>
               <h1>A portable operating system for <em>agentic work.</em></h1>
               <p className="hero-lede">
                 A technical blueprint for taking Cloudflare OS beyond one provider—without losing the Gadget model,
@@ -218,6 +219,7 @@ export function Wiki() {
               <p className="card-kicker">The thesis</p>
               <blockquote>Do not rebuild Cloudflare OS. Build the missing portable control plane around its open runtime.</blockquote>
               <dl>
+                <div><dt>Project</dt><dd>MIT</dd></div>
                 <div><dt>Upstream</dt><dd>Apache-2.0</dd></div>
                 <div><dt>Runtime</dt><dd>workerd</dd></div>
                 <div><dt>Baseline</dt><dd>Kubernetes</dd></div>
@@ -710,6 +712,7 @@ export function Wiki() {
               ["ADR-0010", "Bind one runner generation and capsule to one Provider Connection", "Proposed"],
               ["ADR-0011", "Use operator-installed profiles with versioned capability contracts", "Proposed"],
               ["ADR-0012", "Use EKS and AWS-native data services for the first AWS profile", "Proposed"],
+              ["ADR-0013", "License original project work under MIT while preserving upstream terms", "Accepted"],
             ].map(([id, title, status]) => <div key={id}><code>{id}</code><strong>{title}</strong><span>{status}</span></div>)}
           </div>
           <p className="source-note">Review full rationale and consequences in the <ExternalLink href="https://github.com/openloopagentics/opencloudos/tree/main/docs/adr">ADR registry</ExternalLink>.</p>
@@ -741,6 +744,7 @@ export function Wiki() {
           </SectionHeading>
           <div className="truth-stack">
             {[
+              ["LICENSE + THIRD_PARTY_NOTICES.md", "Own project terms and the upstream provenance boundary"],
               ["CONTEXT.md", "Owns canonical domain language and relationships"],
               ["docs/adr/", "Owns hard-to-reverse decisions and rationale"],
               ["ARCHITECTURE.md", "Owns modules, interfaces, invariants, state, flows, and failure behavior"],
@@ -768,11 +772,29 @@ export function Wiki() {
           <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DOCUMENTATION.md">Documentation policy</ExternalLink> · <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/.github/pull_request_template.md">Pull request checklist</ExternalLink></p>
         </WikiSection>
 
+        <WikiSection id="licensing">
+          <SectionHeading eyebrow="20 · License & provenance" title="Original project work is MIT-licensed">
+            The repository is open source under a clear permissive grant while every upstream and third-party component keeps its own terms.
+          </SectionHeading>
+          <div className="truth-stack">
+            {[
+              ["Original work", "MIT applies where OpenCloudOS contributors hold the relevant copyright"],
+              ["Cloudflare OS", "Upstream source remains Apache-2.0; copying or modifying it carries upstream obligations"],
+              ["Dependencies", "Packages and assets retain their respective licenses; the root MIT file does not replace them"],
+              ["Release artifacts", "Notices, source inventory, SBOM, provenance, and modification records travel with each release"],
+            ].map(([source, ownership], index) => <article key={source}><span>{index + 1}</span><code>{source}</code><p>{ownership}</p></article>)}
+          </div>
+          <div className="callout"><span className="callout-icon">i</span><div><strong>MIT is the project default, not a blanket relicense</strong><p>The license covers original repository work. Cloudflare OS code, dependencies, generated inputs, and other third-party material remain subject to their applicable copyright, attribution, license, modification, NOTICE, and trademark terms.</p></div></div>
+          <div className="security-rule"><span>RELEASE RULE</span><strong>Classify every bundled source by origin before release, and never strip a required upstream notice during build or packaging.</strong></div>
+          <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/LICENSE">MIT License</ExternalLink> · <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/THIRD_PARTY_NOTICES.md">Third-party notices</ExternalLink> · <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/adr/0013-license-original-project-work-under-mit.md">ADR-0013</ExternalLink></p>
+        </WikiSection>
+
         <WikiSection id="project-log">
-          <SectionHeading eyebrow="20 · Living record" title="Project log">
+          <SectionHeading eyebrow="21 · Living record" title="Project log">
             A chronological, append-only view of material research, design, implementation, and operational changes.
           </SectionHeading>
           <div className="project-timeline">
+            <article><div><span>06 AUG 2026</span><i>Shipped license decision</i></div><h3>Original OpenCloudOS work is now MIT-licensed</h3><p>Added canonical MIT terms and package metadata, preserved Cloudflare OS as Apache-2.0, recorded dependency provenance rules, and made license consistency a documentation CI gate.</p><footer>Evidence · LICENSE + third-party notices · ADR-0013 accepted · package metadata · automated wiki and provenance checks</footer></article>
             <article><div><span>06 AUG 2026</span><i>Shipped experimental AWS profile</i></div><h3>AWS now implements all seven portable capabilities</h3><p>Added real S3, Secrets Manager, DynamoDB, Cognito, CloudWatch Logs, EKS Deployment, and EFS CSI PVC bindings. Provider Runners require a mounted capsule; durable metadata and Kubernetes annotations fence generations.</p><footer>Evidence · 11/11 PROFILE scenarios on AWS fakes · AWS-001–006 · real SDK command seam · no AWS account or resource · live qualification next</footer></article>
             <article><div><span>06 AUG 2026</span><i>Shipped extension protocol</i></div><h3>Multi-cloud variation made an executable Deployment Profile SDK</h3><p>Implemented trusted profile registration, strict redacted configuration, seven capability drivers, generation-fenced reconciliation, checkpointed migrations, a synthetic full profile, and reusable PROFILE conformance. GCS/S3/Blob artifacts remain separate from live Credential Capsules.</p><footer>Evidence · 11/11 PROFILE scenarios · 21 profile tests · no cloud SDK · no resource or credential · real Kubernetes profile next</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped supervisor contract</i></div><h3>Codex runner lifecycle bound to one user and capsule</h3><p>Implemented exact secret-free manifest pins, hidden ownership, initialization health, serialized starts, crash generation fencing, explicit recovery, graceful and forced stop, and irreversible capsule destruction behind provider-neutral runtime drivers.</p><footer>Evidence · 8/8 SUPERVISOR scenarios · 41 total tests · no process spawn · no encrypted capsule · real local driver next</footer></article>
@@ -789,7 +811,7 @@ export function Wiki() {
         </WikiSection>
 
         <WikiSection id="aws-profile">
-          <SectionHeading eyebrow="21 · AWS implementation" title="AWS support exists—behind an explicit experimental gate">
+          <SectionHeading eyebrow="22 · AWS implementation" title="AWS support exists—behind an explicit experimental gate">
             Profile <code>aws-eks</code> implements protocol v1 without adding AWS branches to core. The package is usable for engineering qualification, not a production support claim.
           </SectionHeading>
           <div className="test-grid auth-status-grid">
@@ -875,6 +897,8 @@ export function Wiki() {
           <div className="source-list">
             {[
               ["Cloudflare OS repository", "Product model, packages, license, local runtime, self-hosting status", "https://github.com/cloudflare/cloudflare-os"],
+              ["Cloudflare OS license", "Apache-2.0 terms retained by upstream and incorporated upstream material", "https://github.com/cloudflare/cloudflare-os/blob/main/LICENSE"],
+              ["MIT License (SPDX)", "Canonical MIT text and SPDX identifier used by original OpenCloudOS work", "https://spdx.org/licenses/MIT"],
               ["Cloudflare OS README", "Gadgets, Gatekeepers, architecture analogy, deployment status", "https://github.com/cloudflare/cloudflare-os#readme"],
               ["workerd repository", "Open runtime, supported systems, configuration and production process model", "https://github.com/cloudflare/workerd"],
               ["workerd configuration schema", "Local Durable Object persistence and current cluster limitation", "https://github.com/cloudflare/workerd/blob/main/src/workerd/server/workerd.capnp#L705-L736"],
@@ -900,7 +924,7 @@ export function Wiki() {
               ["Agent Provider compatibility record", "Current implementation, official paths, policy state, and evidence gaps", "https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md"],
             ].map(([title, note, href], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><ExternalLink href={href}>{title}</ExternalLink><p>{note}</p></div></article>)}
           </div>
-          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.9 · August 6, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
+          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.10 · August 6, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
         </WikiSection>
       </main>
     </div>
