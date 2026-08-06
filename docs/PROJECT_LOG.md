@@ -23,6 +23,14 @@ Verification:
 - GitHub Pages subpath build;
 - documentation cross-link inspection;
 - architecture and execution-plan consistency review.
+- commit `ecd1f53` pushed to `main`;
+- GitHub Pages run `31058568568` completed successfully;
+- public wiki returned HTTP 200.
+
+Operational follow-ups discovered during delivery:
+
+- GitHub Actions reported that several pinned action releases still target the deprecated Node.js 20 runtime and are being forced onto Node.js 24; refresh those action revisions as a maintenance change;
+- GitHub reported four open Dependabot alerts on the default branch: two high severity and two moderate severity; triage them before implementation dependencies expand.
 
 Related decisions: ADR-0001 through ADR-0007.
 
