@@ -48,6 +48,8 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | Slice | Status | Evidence / next condition |
 |---|---|---|
 | M0 documentation control | Implemented | CI runs contract, documentation-integrity, material-change, type, and wiki build checks |
+| Deployment Profile SDK | Protocol v1 implemented | Registry, seven capability contracts, config validation, generation-fenced reconciliation, checkpointed migrations, synthetic full profile, and PROFILE-001–011 |
+| AWS / GCP / Azure / self-hosted profiles | Not implemented | Build self-hosted/Kubernetes first; protocol remains provisional until two materially different profiles pass real-resource conformance |
 | WS9 provider-neutral Broker | Implemented | Interface, policy registry, in-memory metadata store, normalized events, audit sink, and synthetic Adapter |
 | AUTH-001 through AUTH-010 | Passing on synthetic target | Ten deterministic tests; official-provider and process-isolation targets still required |
 | Anthropic approval package | Drafted, not sent | Maintainer must assign owner, review scope, and send through an approved channel |
@@ -168,6 +170,7 @@ Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PR
 
 **Deliverables:**
 
+- Deployment Profile SDK with immutable manifests, strict configuration, capability discovery, generation fencing, migrations, and conformance;
 - Docker Compose development profile;
 - Helm chart and Kubernetes operator procedures;
 - self-hosted, AWS, GCP, and Azure profiles;
@@ -175,7 +178,7 @@ Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PR
 - upgrade, rollback, backup, restore, shard replacement, and credential-rotation runbooks;
 - cost and capacity worksheet.
 
-**Exit evidence:** an operator unfamiliar with the implementation installs each profile from the wiki, runs smoke tests, performs a backup and restore, and completes a version upgrade.
+**Exit evidence:** an operator unfamiliar with the implementation installs each profile from the wiki, runs PROFILE-001–011 plus product smoke tests, performs a backup and restore, and completes a version upgrade.
 
 **Depends on:** WS1 through WS5. Provides beta and 1.0 packaging.
 
@@ -405,20 +408,22 @@ These issues are ordered to reduce uncertainty rather than maximize visible feat
 12. Define Provider Runtime Broker and implement a synthetic Adapter for AUTH-001 through AUTH-010.
 13. **Implemented:** spike Codex app-server managed device-code login from generated `codex-cli 0.146.1` schemas without reading its credential cache or a real account.
 14. **Implemented contract:** capsule-bound supervisor passes SUPERVISOR-001–008 with a pinned manifest, one capsule per connection, generation fencing, explicit recovery, bounded stop, and irreversible destruction against synthetic drivers.
-15. **Active:** implement the real local app-server runtime and encrypted capsule drivers, bind the bounded stdio transport, persist supervisor state, and reconcile orphans.
-16. Map Codex thread/turn events and implement the explicit Capability Broker approval bridge.
-17. Enforce default-deny Gadget egress and malicious-repository credential isolation.
-18. Port the GitHub Gatekeeper through Capability Broker semantics.
-19. Implement prepared-action and approval state machines.
-20. Add the Audit Ledger and privileged fail-closed behavior.
-21. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
-22. Define Placement Registry schema and property tests for lease epochs.
-23. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
-24. Build Shard Controller and Helm alpha.
-25. Add shard fault injection and TB-005.
-26. Add provider adapters and deployment profiles one at a time behind the same tests.
-27. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
-28. Run release-candidate security and operator validation.
+15. **Implemented protocol:** Deployment Profile SDK v1, seven capability contracts, synthetic full profile, and PROFILE-001–011 conformance.
+16. **Active:** implement the real local app-server runtime and encrypted capsule drivers, bind the bounded stdio transport, persist supervisor state, and reconcile orphans.
+17. Map Codex thread/turn events and implement the explicit Capability Broker approval bridge.
+18. Enforce default-deny Gadget egress and malicious-repository credential isolation.
+19. Port the GitHub Gatekeeper through Capability Broker semantics.
+20. Implement prepared-action and approval state machines.
+21. Add the Audit Ledger and privileged fail-closed behavior.
+22. Build the first real self-hosted/Kubernetes Deployment Profile and run PROFILE-001–011.
+23. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
+24. Define Placement Registry schema and property tests for lease epochs.
+25. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
+26. Build Shard Controller and Helm alpha.
+27. Add shard fault injection and TB-005.
+28. Add AWS, GCP, and Azure profiles one at a time behind the same tests.
+29. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
+30. Run release-candidate security and operator validation.
 
 ## Release gates
 
@@ -427,6 +432,7 @@ Every preview or stable release must satisfy:
 - source, dependency, type, and image builds are reproducible;
 - license notices, SBOM, and provenance are present;
 - all required conformance scenarios pass or have a published, approved deviation;
+- PROFILE-001 through PROFILE-011 pass against real resources for every supported Deployment Profile;
 - Gadget egress and capability-attenuation tests pass;
 - AUTH-001 through AUTH-010 pass for every enabled Agent Provider mode;
 - each subscription mode has current official documentation, pinned client evidence, and required provider approval;

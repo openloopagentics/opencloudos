@@ -12,6 +12,7 @@ OpenCloudOS preserves the Cloudflare OS product and capability model while addin
 6. Prefer deep modules that hide provider, lifecycle, and recovery complexity.
 7. Treat documentation and operational evidence as release artifacts.
 8. Keep personal subscription credentials user-bound and owned by official provider runtimes.
+9. Load privileged provider variation only from pinned, operator-installed Deployment Profiles.
 
 ## System contexts
 
@@ -138,6 +139,30 @@ The supervisor binds one immutable secret-free launch manifest and one opaque ca
 - every mutation is either classified auto-commit by policy or becomes a prepared action;
 - commit is idempotent for one prepared-action identity.
 
+### Deployment Profile Registry module
+
+**Purpose:** turn a trusted operator-selected profile package into validated, discoverable infrastructure capabilities without exposing provider SDKs to core modules.
+
+**Interface:** register and freeze a versioned profile; discover by required capability; validate configuration; instantiate drivers; reconcile a desired Deployment Generation; plan/apply/rollback checkpointed migrations; close the instance. Public failures contain normalized codes, registered identifiers, and field/reason metadata—not submitted values or raw cloud errors.
+
+**Implementation hidden behind the interface:** provider SDK clients, credential lookup, region/service selection, resource naming, workload orchestration, storage and database calls, IAM/workload identity, telemetry export, infrastructure polling, teardown, and migration mechanics.
+
+**Profile Capabilities:** immutable artifact storage, sealed secret binding, mutable Credential Capsule lifecycle, control metadata compare-and-swap, identity normalization, workload runtime reconciliation, and telemetry. The Credential Capsule remains separate from Secret Store and object storage because an official agent client needs an isolated mutable credential envelope.
+
+**Invariants:**
+
+- profiles are pinned and installed by the operator; a request, Workspace, Gadget, or manifest URL cannot load executable profile code;
+- manifest protocol, capabilities, driver versions, architectures, configuration schema, and migration graph validate before registration;
+- configuration contains references rather than raw credential material and invalid values do not appear in public errors;
+- declared capabilities exactly match instantiated drivers;
+- reconcile is idempotent for the same desired state and generation, rejects stale or same-generation mutation, and cannot resurrect a destroyed generation;
+- durable drivers persist generation fences so controller restart cannot admit stale work;
+- migrations are explicit, checkpointed, resumable, and rollback only when every step declares and implements reversal;
+- provider-specific resource identities remain opaque outside the profile;
+- every production profile passes the same PROFILE conformance suite and publishes deviations.
+
+**Current Implementation:** protocol v1, registry, defensive manifest discovery, strict/redacted configuration validator, seven capability contracts, generation-fenced profile handle, checkpointed migration executor, reusable conformance harness, and a synthetic full profile exist in `packages/deployment-profile-sdk`. PROFILE-001 through PROFILE-011 pass without cloud resources or credentials. No AWS, GCP, Azure, Kubernetes, or self-hosted production profile exists; protocol v1 remains provisional until two materially different profiles pass. Detailed author and lifecycle contract: `docs/DEPLOYMENT_PROFILES.md`.
+
 ### Artifact Repository module
 
 **Purpose:** store and retrieve immutable blueprint versions, exports, avatars, and other large artifacts.
@@ -218,6 +243,7 @@ The supervisor binds one immutable secret-free launch manifest and one opaque ca
 | Approval decision | Gatekeeper state and Audit Ledger | Append-only | Replay decision; never infer approval |
 | Audit event | Audit Ledger | Durable append | Replicated export and integrity verification |
 | Deployment and shard status | Shard Controller / Kubernetes + PostgreSQL | Eventually reconciled | Controller reconciliation |
+| Deployment profile selection, config references, and generation | Deployment Profile Registry / PostgreSQL | Strong compare-and-swap | Restore metadata, validate installed profile/version, then reconcile a newer generation |
 
 ## Core execution flows
 

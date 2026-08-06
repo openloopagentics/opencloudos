@@ -15,6 +15,7 @@ This design lets each person connect an eligible Claude or ChatGPT/Codex subscri
 | Codex app-server authentication Adapter | Protocol spike implemented | Pinned `codex-cli 0.146.1`; CODEX-001–008 pass on captured fixtures |
 | Codex app-server stdio transport | Implemented | RUNNER-001–008 cover framing, correlation, redaction, resource bounds, shutdown, and fail-closed server requests |
 | Codex Provider Runner supervisor | Contract implemented | SUPERVISOR-001–008 cover exact manifest pins, hidden ownership, initialization health, serialized starts, crash generation fencing, explicit recovery, stop, forced kill, and destruction against synthetic drivers |
+| Deployment Profile workload + Credential Capsule capabilities | Contract implemented | PROFILE-008 and PROFILE-010 prove synthetic workload/capsule generation fencing, tenant isolation, mount, seal, and destruction |
 | Local isolated runtime + encrypted capsule drivers | Next | Actually spawn the pinned app-server, bind stdio, isolate storage/process/network, persist supervisor metadata, and reconcile orphans |
 | Codex app-server turn Adapter | Planned after supervisor | Thread/turn mapping, explicit approval bridge, interruption, recovery, and real test-account conformance |
 | Production Credential Capsule | Planned | Process/filesystem/environment isolation not yet implemented |

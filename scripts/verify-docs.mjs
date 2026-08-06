@@ -19,6 +19,7 @@ const requiredRecords = [
   "docs/CODEX_RUNNER_TRANSPORT.md",
   "docs/CODEX_RUNNER_SUPERVISOR.md",
   "docs/DOCUMENTATION.md",
+  "docs/DEPLOYMENT_PROFILES.md",
   "docs/EXECUTION_PLAN.md",
   "docs/PROJECT_LOG.md",
   "docs/PROVIDER_COMPATIBILITY.md",
@@ -104,8 +105,19 @@ for (let scenario = 1; scenario <= 8; scenario += 1) {
   if (!supervisorTests.includes(id)) fail(`${id} is missing from the executable Runner supervisor suite`);
 }
 
+const deploymentProfiles = read("docs/DEPLOYMENT_PROFILES.md");
+const profileTests = read("packages/deployment-profile-sdk/test/deployment-profile-sdk.test.ts");
+for (let scenario = 1; scenario <= 11; scenario += 1) {
+  const id = `PROFILE-${String(scenario).padStart(3, "0")}`;
+  if (!deploymentProfiles.includes(id)) fail(`${id} is missing from docs/DEPLOYMENT_PROFILES.md`);
+  if (!profileTests.includes(id)) fail(`${id} is missing from the executable Deployment Profile suite`);
+}
+
 if (!read("docs/PROJECT_LOG.md").includes("Provider Runtime Broker")) {
   fail("Project Log does not record the Provider Runtime Broker implementation");
+}
+if (!read("docs/PROJECT_LOG.md").includes("Deployment Profile SDK")) {
+  fail("Project Log does not record the Deployment Profile SDK implementation");
 }
 
 if (failures.length > 0) {
@@ -114,5 +126,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, 8 CODEX scenarios, 8 RUNNER scenarios, and 8 SUPERVISOR scenarios verified`,
+  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, 8 CODEX scenarios, 8 RUNNER scenarios, 8 SUPERVISOR scenarios, and 11 PROFILE scenarios verified`,
 );

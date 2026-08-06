@@ -9,8 +9,10 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "npm run test:broker && npm run test:docs && npm run build",
+    "test": "npm run test:contracts && npm run test:docs && npm run build",
+    "test:contracts": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js .test-dist/packages/provider-runtime-broker/test/*.test.js",
     "test:broker": "tsc -p tsconfig.test.json && node --test .test-dist/packages/provider-runtime-broker/test/*.test.js",
+    "test:profiles": "tsc -p tsconfig.test.json && node --test .test-dist/packages/deployment-profile-sdk/test/*.test.js",
     "test:docs": "node scripts/verify-docs.mjs"
   },
   "dependencies": {

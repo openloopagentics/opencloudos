@@ -2,6 +2,40 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-06 — Multi-cloud variation made an executable profile protocol
+
+**Status:** shipped protocol v1 and synthetic conformance; no production cloud profile implemented
+
+Implemented the Deployment Profile SDK in `packages/deployment-profile-sdk` so AWS, GCP, Azure, Kubernetes, and self-hosted support can live in operator-installed profile packages instead of core conditionals.
+
+Behavior implemented:
+
+- trusted startup registration validates and freezes manifests, capabilities, architecture support, configuration schemas, and migration graphs;
+- capability-filtered discovery returns defensive metadata copies;
+- configuration accepts only flat typed values and opaque references, rejects credential-shaped ordinary fields, and never echoes submitted values in errors;
+- instantiated drivers must exactly match declared Artifact Store, Secret Store, Credential Capsule, Control Metadata, Identity, Workload Runtime, and Telemetry capabilities;
+- whole-profile reconciliation is idempotent, generation-fenced, rejects same-generation mutation, and cannot resurrect a destroyed generation;
+- migration planning, tamper checks, durable checkpoints, resume, rollback, and idempotent close are explicit;
+- the synthetic full profile implements all seven contracts without provider accounts, credentials, processes, networks, or external storage;
+- the reusable conformance harness produces normalized evidence for PROFILE-001 through PROFILE-011.
+
+Security and portability decisions:
+
+- profiles are pinned privileged packages installed by operators, never remotely downloaded plugins;
+- GCS, S3, and Blob Storage map to Artifact Store or encrypted backup—not the live writable official-client credential cache;
+- Credential Capsule is a separate generation-fenced mount/seal/destroy contract;
+- a cloud profile schedules the Provider Runner workload and capsule attachment while the Codex supervisor keeps app-server stdio local inside that workload;
+- protocol v1 is provisional until at least two materially different production profiles pass the same suite.
+
+Verification:
+
+- PROFILE-001 through PROFILE-011 pass;
+- 21 deployment-profile tests pass, including registry/handle immutability, runtime exactness, redacted factory failures, driver parity, schema safety, and migration-plan tampering;
+- all existing AUTH, CODEX, RUNNER, and SUPERVISOR tests remain part of the combined contract command;
+- no production dependency or cloud SDK was added.
+
+Related decision: ADR-0011. Detailed evidence: `docs/DEPLOYMENT_PROFILES.md`. Next: implement the self-hosted/Kubernetes profile as the first real adapter, then GCP/GCS, AWS, and Azure without changing core imports.
+
 ## 2026-08-05 — Codex runner lifecycle bound to one user and capsule
 
 **Status:** shipped supervisor contract; real process and encrypted capsule drivers not implemented

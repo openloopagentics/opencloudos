@@ -1,7 +1,7 @@
 # Agent Provider Compatibility
 
-**Last reviewed:** 2026-08-05  
-**Release baseline:** v0.7 M0 execution
+**Last reviewed:** 2026-08-06
+**Release baseline:** v0.8 M0 execution
 **Rule:** this record is time-sensitive. Every stable release revalidates official documentation, provider policy, pinned client behavior, and the AUTH suite.
 
 ## Status vocabulary
@@ -34,6 +34,7 @@
 - Codex initialization, device login, sanitized account state, limit mapping, and logout pass CODEX-001 through CODEX-008 against captured `codex-cli 0.146.1` schema fixtures.
 - Codex stdio JSONL correlation, framing, redacted errors, bounded input, shutdown, and default server-request rejection pass RUNNER-001 through RUNNER-008.
 - Codex supervisor ownership, manifest pins, initialization health, concurrency, crash generation fencing, explicit recovery, stop/destruction, and bounded termination pass SUPERVISOR-001 through SUPERVISOR-008 against injected synthetic drivers.
+- Deployment Profile workload and Credential Capsule lifecycle contracts pass PROFILE-008 and PROFILE-010 in the synthetic full profile; no real cloud runner or capsule driver exists.
 - Codex turn execution fails closed; there is no real app-server process launch, durable supervisor store, approval bridge, or production Credential Capsule yet.
 - Unauthorized and unknown Provider Connection references return the same public error shape.
 - Claude subscription mode remains blocked when an operator marks it enabled without an approval reference.

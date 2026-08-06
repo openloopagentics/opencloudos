@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { id: "state", label: "State ownership", group: "Architecture", keywords: "postgres sqlite object store consistency recovery" },
   { id: "flows", label: "Flows & failure model", group: "Architecture", keywords: "workspace gadget mutation recovery failure consistency" },
   { id: "contracts", label: "Portable contracts", group: "Architecture", keywords: "adapters s3 gcs azure oidc telemetry" },
+  { id: "profile-sdk", label: "Deployment Profile SDK", group: "Architecture", keywords: "extension registry capability driver aws gcp gcs azure kubernetes migration reconciliation" },
   { id: "security", label: "Security invariants", group: "Trust", keywords: "capability sandbox approval audit egress" },
   { id: "subscriptions", label: "Claude & Codex access", group: "Trust", keywords: "oauth subscription provider connection codex claude token credential capsule app server" },
   { id: "gatekeepers", label: "Gatekeepers", group: "Trust", keywords: "prepare preview commit reject human loop" },
@@ -193,7 +194,7 @@ export function Wiki() {
 
         <div className="sidebar-footer">
           <span className="status-dot" /> M0 execution active
-          <strong>05 AUG 2026</strong>
+          <strong>06 AUG 2026</strong>
         </div>
       </aside>
 
@@ -201,7 +202,7 @@ export function Wiki() {
         <WikiSection id="brief">
           <div className="hero-grid">
             <div className="hero-copy">
-              <div className="release-pill"><span /> Architecture + execution · v0.7</div>
+              <div className="release-pill"><span /> Architecture + execution · v0.8</div>
               <h1>A portable operating system for <em>agentic work.</em></h1>
               <p className="hero-lede">
                 A technical blueprint for taking Cloudflare OS beyond one provider—without losing the Gadget model,
@@ -268,6 +269,8 @@ export function Wiki() {
               ["Placement", "The authoritative assignment of one Workspace to one Runtime Shard for an epoch."],
               ["Placement Lease", "A time-bounded, epoch-fenced claim allowing one Runtime Shard to serve a Workspace."],
               ["Deployment Profile", "Provider-specific adapters and infrastructure defaults satisfying portable interfaces."],
+              ["Profile Capability", "A versioned infrastructure contract implemented by a Deployment Profile."],
+              ["Deployment Generation", "A monotonic desired-state revision that fences stale reconciliation."],
               ["Agent Provider", "A vendor runtime supplying model inference and an agent execution loop through a documented path."],
               ["Provider Connection", "One user's link to one Agent Provider, including status and billing mode but never raw credentials."],
               ["Provider Runner", "An isolated official provider-client process serving one Provider Connection."],
@@ -439,6 +442,42 @@ export function Wiki() {
           </div>
         </WikiSection>
 
+        <WikiSection id="profile-sdk">
+          <SectionHeading eyebrow="06 · Extension protocol" title="Cloud support is a profile, not a fork">
+            Protocol v1 turns AWS, GCP, Azure, Kubernetes, and self-hosted variation into trusted operator-installed packages with one lifecycle and conformance model.
+          </SectionHeading>
+          <div className="test-grid auth-status-grid">
+            <article><div className="test-status">V1 IMPLEMENTED</div><h3>Registry + discovery</h3><p>Frozen manifests, protocol and capability versions, architecture support, defensive discovery, and duplicate rejection.</p></article>
+            <article><div className="test-status">7 CONTRACTS</div><h3>Portable capabilities</h3><p>Artifacts, sealed secrets, Credential Capsules, metadata, identity, workload runtime, and telemetry.</p></article>
+            <article><div className="test-status">11 / 11 PASS</div><h3>PROFILE conformance</h3><p>Configuration, isolation, fencing, idempotence, capsule destruction, migrations, rollback, and teardown.</p></article>
+            <article><div className="test-status">SYNTHETIC ONLY</div><h3>Production profiles</h3><p>No AWS, GCP, Azure, or self-hosted adapter is supported yet. The first real target is Kubernetes/self-hosted.</p></article>
+          </div>
+          <div className="mapping-table" role="table" aria-label="Deployment profile capability mapping">
+            <div className="mapping-head" role="row"><span>Profile capability</span><span>Cloud examples</span><span>Non-negotiable behavior</span></div>
+            {[
+              ["Artifact Store", "S3 · GCS · Blob · MinIO", "Immutable digest + tenant scope"],
+              ["Secret Store", "Secrets Manager · Secret Manager · Key Vault · Vault", "Seal and bind; no read/export Interface"],
+              ["Credential Capsule", "Encrypted dedicated volume/binding", "Mount · seal · destroy with generation fencing"],
+              ["Control Metadata", "Managed PostgreSQL · PostgreSQL", "Compare-and-swap conflicts"],
+              ["Workload Runtime", "EKS · GKE · AKS · Kubernetes", "Idempotent desired state + stale-generation rejection"],
+              ["Identity + Telemetry", "OIDC/workload identity · OTLP", "Normalized outputs without provider credentials"],
+            ].map(([capability, examples, behavior]) => <div className="mapping-row" role="row" key={capability}><strong>{capability}</strong><code>{examples}</code><span>{behavior}</span></div>)}
+          </div>
+          <div className="flow-line">
+            {[
+              ["01", "Register", "Validate + freeze trusted package"],
+              ["02", "Discover", "Select required capabilities"],
+              ["03", "Configure", "Validate typed values + references"],
+              ["04", "Reconcile", "Apply one desired generation"],
+              ["05", "Migrate", "Checkpoint, resume, or roll back"],
+              ["06", "Conform", "Publish PROFILE evidence"],
+            ].map(([number, title, body]) => <article key={number}><span>{number}</span><strong>{title}</strong><p>{body}</p></article>)}
+          </div>
+          <div className="callout callout-warning"><span className="callout-icon">!</span><div><strong>GCS is not a live credential filesystem</strong><p>S3, GCS, and Blob Storage map to immutable artifacts and encrypted backups. The official agent client receives a separate mutable, isolated Credential Capsule attachment inside its Provider Runner workload.</p></div></div>
+          <div className="security-rule"><span>EXTENSION RULE</span><strong>Profiles are pinned privileged packages loaded by the operator—never code downloaded from a request, Workspace, Gadget, or manifest URL.</strong></div>
+          <p className="source-note">Complete authoring, lifecycle, capability, migration, cloud mapping, and PROFILE-001–011 contract: <ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Deployment Profile SDK</ExternalLink>.</p>
+        </WikiSection>
+
         <WikiSection id="security">
           <SectionHeading eyebrow="07 · Trust model" title="Security invariants">
             Portability is successful only if the new runtime preserves the upstream authority model—not merely the UI and feature list.
@@ -529,7 +568,7 @@ export function Wiki() {
             ].map(([phase, title, timing, body]) => <article key={phase}><div className="phase-number">P{phase}</div><div><span>{timing}</span><h3>{title}</h3><p>{body}</p></div></article>)}
           </div>
           <div className="callout callout-warning"><span className="callout-icon">?</span><div><strong>First program gate</strong><p>Do not fund the distributed control plane until Milestone 1 proves that standalone workerd can preserve the required persistence, isolation, RPC, and recovery semantics.</p></div></div>
-          <div className="callout"><span className="callout-icon">✓</span><div><strong>M0 execution update</strong><p>The provider-neutral Broker and synthetic AUTH-001–010 suite are implemented. Documentation integrity and material-change checks now run in CI. Codex app-server is the next Adapter; the Anthropic approval request remains an unsent draft.</p><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md">Current compatibility matrix</ExternalLink></div></div>
+          <div className="callout"><span className="callout-icon">✓</span><div><strong>M0 execution update</strong><p>The Broker, Codex auth/transport/supervisor contracts, and Deployment Profile SDK v1 now have executable synthetic conformance. Real isolated runners and production cloud profiles remain the next evidence gates; Anthropic approval remains unsent.</p><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/EXECUTION_PLAN.md">Current execution plan</ExternalLink></div></div>
         </WikiSection>
 
         <WikiSection id="workstreams">
@@ -601,7 +640,9 @@ export function Wiki() {
               "Pin and fixture-test Codex app-server authentication protocol",
               "Implement bounded app-server stdio transport and RUNNER-001–008",
               "Implement capsule-bound supervisor contract and SUPERVISOR-001–008",
+              "Implement Deployment Profile SDK and PROFILE-001–011",
               "Build real local app-server runtime and encrypted capsule drivers",
+              "Build first real self-hosted/Kubernetes Deployment Profile",
               "Map Codex thread/turn events and explicit approval bridge",
               "Enforce default-deny Gadget egress",
               "Port GitHub Gatekeeper through Capability Broker",
@@ -633,6 +674,7 @@ export function Wiki() {
               "Reproducible source, dependency, type, and image builds",
               "License notices, SBOM, provenance, and signed images",
               "Required Conformance Scenarios pass or publish an approved deviation",
+              "PROFILE-001–011 pass on real resources for every supported Deployment Profile",
               "Gadget egress and Capability attenuation tests pass",
               "AUTH-001–010 pass for every enabled Agent Provider mode",
               "Provider approval and official-client compatibility records are current",
@@ -663,6 +705,7 @@ export function Wiki() {
               ["ADR-0008", "Use provider-owned, user-bound subscription authentication", "Proposed"],
               ["ADR-0009", "Use local stdio and reject unbound provider requests", "Proposed"],
               ["ADR-0010", "Bind one runner generation and capsule to one Provider Connection", "Proposed"],
+              ["ADR-0011", "Use operator-installed profiles with versioned capability contracts", "Proposed"],
             ].map(([id, title, status]) => <div key={id}><code>{id}</code><strong>{title}</strong><span>{status}</span></div>)}
           </div>
           <p className="source-note">Review full rationale and consequences in the <ExternalLink href="https://github.com/openloopagentics/opencloudos/tree/main/docs/adr">ADR registry</ExternalLink>.</p>
@@ -681,6 +724,7 @@ export function Wiki() {
               ["Tenancy", "Users, collaborators, share links, and imported Blueprints retain boundaries."],
               ["Audit", "Every privileged operation yields a complete, correlated, tamper-evident record."],
               ["Provider ownership", "Two collaborators cannot enumerate, select, or spend each other's personal Provider Connections."],
+              ["Profile portability", "Every supported profile passes discovery, isolation, generation, capsule, migration, and teardown conformance."],
               ["Credential isolation", "Workspace commands, Gadgets, prompts, environments, processes, logs, and traces reveal no provider credential."],
               ["Billing safety", "Rate limits never trigger an implicit subscription-to-API billing change."],
             ].map(([title, body]) => <article key={title}><div className="test-status">MUST PASS</div><h3>{title}</h3><p>{body}</p></article>)}
@@ -697,6 +741,7 @@ export function Wiki() {
               ["docs/adr/", "Owns hard-to-reverse decisions and rationale"],
               ["ARCHITECTURE.md", "Owns modules, interfaces, invariants, state, flows, and failure behavior"],
               ["EXECUTION_PLAN.md", "Owns workstreams, milestones, dependencies, risk, and release gates"],
+              ["DEPLOYMENT_PROFILES.md", "Owns profile loading, capabilities, configuration, reconciliation, migrations, and PROFILE scenarios"],
               ["SUBSCRIPTION_AUTH.md", "Owns agent-provider authentication, billing authority, policy gates, and AUTH scenarios"],
               ["PROVIDER_COMPATIBILITY.md", "Owns time-sensitive provider support, client pin, evidence, and approval state"],
               ["PROJECT_LOG.md", "Owns the chronological record of material work"],
@@ -723,6 +768,7 @@ export function Wiki() {
             A chronological, append-only view of material research, design, implementation, and operational changes.
           </SectionHeading>
           <div className="project-timeline">
+            <article><div><span>06 AUG 2026</span><i>Shipped extension protocol</i></div><h3>Multi-cloud variation made an executable Deployment Profile SDK</h3><p>Implemented trusted profile registration, strict redacted configuration, seven capability drivers, generation-fenced reconciliation, checkpointed migrations, a synthetic full profile, and reusable PROFILE conformance. GCS/S3/Blob artifacts remain separate from live Credential Capsules.</p><footer>Evidence · 11/11 PROFILE scenarios · 21 profile tests · no cloud SDK · no resource or credential · real Kubernetes profile next</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped supervisor contract</i></div><h3>Codex runner lifecycle bound to one user and capsule</h3><p>Implemented exact secret-free manifest pins, hidden ownership, initialization health, serialized starts, crash generation fencing, explicit recovery, graceful and forced stop, and irreversible capsule destruction behind provider-neutral runtime drivers.</p><footer>Evidence · 8/8 SUPERVISOR scenarios · 41 total tests · no process spawn · no encrypted capsule · real local driver next</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped transport slice</i></div><h3>Codex Provider Runner transport made fail-closed</h3><p>Implemented bounded stdio JSONL correlation and Node stream framing. Eight RUNNER scenarios cover out-of-order responses, notifications, redacted errors, malformed input, unknown IDs, fragmented frames, resource bounds, and fixed rejection of server-initiated approvals.</p><footer>Evidence · 8/8 RUNNER tests · no process spawn · no account access · no automatic approval · now consumed by supervisor contract</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped protocol spike</i></div><h3>Codex app-server authentication made executable</h3><p>Pinned generated <code>codex-cli 0.146.1</code> auth schemas and implemented an allowlisting client plus authentication-only Adapter. Eight CODEX scenarios cover handshake, device login, account sanitation, limits, completion, logout, billing separation, and fail-closed turns.</p><footer>Evidence · 8/8 CODEX tests · no account read · no login · no provider credential · production runner still pending</footer></article>
@@ -737,7 +783,9 @@ export function Wiki() {
         </WikiSection>
 
         <WikiSection id="providers">
-          <SectionHeading eyebrow="12 · Deployment" title="Provider matrix" />
+          <SectionHeading eyebrow="12 · Deployment" title="Provider matrix">
+            All four columns now target the same protocol v1 capability contracts. They remain planned until real-resource conformance and runbooks pass.
+          </SectionHeading>
           <div className="provider-table">
             <div className="provider-head"><span>Capability</span><span>AWS</span><span>GCP</span><span>Azure</span><span>Self-hosted</span></div>
             {[
@@ -745,11 +793,13 @@ export function Wiki() {
               ["Metadata", "RDS Postgres", "Cloud SQL", "Azure Postgres", "PostgreSQL"],
               ["Objects", "S3", "GCS", "Blob Storage", "MinIO"],
               ["Secrets", "Secrets Manager", "Secret Manager", "Key Vault", "Vault"],
+              ["Capsules", "Encrypted runner volume", "Encrypted runner volume", "Encrypted runner volume", "Encrypted dedicated volume"],
               ["Ingress", "ALB / NLB", "Cloud Load Balancing", "App Gateway", "Ingress controller"],
               ["Telemetry", "OTLP exporter", "OTLP exporter", "OTLP exporter", "OTel Collector"],
             ].map((row) => <div className="provider-row" key={row[0]}>{row.map((cell, index) => index === 0 ? <strong key={cell}>{cell}</strong> : <span key={cell}>{cell}</span>)}</div>)}
           </div>
           <p className="table-caption">Provider services are deployment profiles. Core application packages must not import provider SDKs.</p>
+          <p className="source-note"><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md">Read the Deployment Profile SDK and author checklist</ExternalLink>.</p>
         </WikiSection>
 
         <WikiSection id="risks">
@@ -763,6 +813,7 @@ export function Wiki() {
               ["High", "Cross-user subscription spend", "Can a collaborative turn resolve a personal connection that does not belong to its initiating User?"],
               ["High", "Experimental Codex Interface", "Can pinned app-server schema drift be detected before it changes login, limit, logout, or turn behavior?"],
               ["High", "Orphan runner recovery", "Can a restarted host reconcile processes, capsule mounts, and durable generations without two active owners or silent credential loss?"],
+              ["High", "Profile protocol drift", "Will the first two real profiles expose capability or lifecycle differences that require protocol v2 before stability?"],
               ["High", "Claude provider approval", "Will Anthropic approve Claude.ai login and subscription rate limits for this third-party distribution?"],
               ["High", "WebSocket recovery", "What session state must survive pod replacement versus reconnect from the browser?"],
               ["High", "Upstream velocity", "How much runtime coupling will new Cloudflare OS releases add?"],
@@ -791,13 +842,14 @@ export function Wiki() {
               ["Codex auth protocol spike", "Pinned app-server schema boundary, sanitation rules, executable fixtures, and remaining release gates", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_ADAPTER_SPIKE.md"],
               ["Codex Provider Runner transport", "Bounded stdio JSONL framing, correlation, redacted failures, default server-request rejection, and remaining isolation work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_TRANSPORT.md"],
               ["Codex Provider Runner supervisor", "Owner binding, exact pins, initialization health, generation fencing, lifecycle, synthetic conformance, and remaining real-driver work", "https://github.com/openloopagentics/opencloudos/blob/main/docs/CODEX_RUNNER_SUPERVISOR.md"],
+              ["Deployment Profile SDK", "Operator-installed extension protocol, seven capabilities, cloud mapping, migrations, synthetic profile, and PROFILE conformance", "https://github.com/openloopagentics/opencloudos/blob/main/docs/DEPLOYMENT_PROFILES.md"],
               ["Claude Code authentication", "Subscription login, credential storage, precedence, expiry, and setup-token", "https://code.claude.com/docs/en/authentication"],
               ["Claude Agent SDK overview", "Third-party Claude.ai login and subscription-limit approval requirement", "https://code.claude.com/docs/en/agent-sdk/overview"],
               ["Claude Agent SDK subscription update", "Current time-sensitive treatment of third-party subscription usage", "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan"],
               ["Agent Provider compatibility record", "Current implementation, official paths, policy state, and evidence gaps", "https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md"],
             ].map(([title, note, href], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><ExternalLink href={href}>{title}</ExternalLink><p>{note}</p></div></article>)}
           </div>
-          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.7 · August 5, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
+          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.8 · August 6, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
         </WikiSection>
       </main>
     </div>

@@ -104,6 +104,14 @@ _Avoid_: Container, VM, process
 A provider-specific set of adapters and infrastructure defaults satisfying the portable module interfaces.
 _Avoid_: Fork, edition, environment
 
+**Profile Capability**:
+A protocol-versioned infrastructure contract declared and implemented by a deployment profile, such as artifact storage, credential capsules, identity, or workload runtime.
+_Avoid_: Cloud service, feature flag, provider API
+
+**Deployment Generation**:
+A monotonically increasing desired-state revision that fences stale profile, workload, and credential-capsule reconciliation.
+_Avoid_: Retry count, deployment version, timestamp
+
 **Conformance Scenario**:
 An end-to-end behavioral assertion executed against upstream Cloudflare OS and OpenCloudOS.
 _Avoid_: Unit test, parity test
@@ -124,6 +132,7 @@ _Avoid_: Unit test, parity test
 - A side-effecting capability call produces a **Prepared Action** before an **Approval Decision**
 - Every authority transition and external outcome produces one or more **Audit Events**
 - A **Deployment Profile** provides adapters without changing product or security semantics
+- A **Deployment Profile** declares one or more **Profile Capabilities** and reconciles only the current **Deployment Generation**
 - A **Conformance Scenario** verifies the same invariant across runtime implementations
 
 ## Example dialogue

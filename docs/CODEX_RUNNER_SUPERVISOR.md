@@ -134,6 +134,7 @@ Run these scenarios with `npm run test:broker`.
 ## Remaining production gates
 
 - implement a local runtime driver that actually launches the pinned `codex app-server --listen stdio://` process;
+- adapt the Deployment Profile `workload_runtime` and `credential_capsule` capabilities to schedule and attach the isolated Provider Runner envelope;
 - implement encrypted per-connection capsule storage that cannot be read by workspace or tool processes;
 - persist supervisor metadata and reconcile orphan processes and mounts after host restart;
 - enforce dedicated uid/container boundaries, filesystem mounts, default-deny egress, resource limits, and crash-dump controls;

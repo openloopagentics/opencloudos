@@ -14,3 +14,4 @@ ADRs record hard-to-reverse tradeoffs. Their status is reflected in the public w
 | [0008](./0008-provider-owned-subscription-auth.md) | Use provider-owned, user-bound subscription authentication | Proposed |
 | [0009](./0009-use-local-stdio-and-reject-unbound-provider-requests.md) | Use local stdio and reject unbound provider requests | Proposed |
 | [0010](./0010-bind-runner-generation-and-capsule-to-provider-connection.md) | Bind one runner generation and capsule to one Provider Connection | Proposed |
+| [0011](./0011-use-operator-installed-deployment-profiles.md) | Use operator-installed deployment profiles with versioned capability contracts | Proposed |
