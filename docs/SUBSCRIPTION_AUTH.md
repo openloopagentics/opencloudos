@@ -1,6 +1,6 @@
 # Subscription-Backed Agent Providers
 
-**Design status:** proposed for OpenCloudOS 1.0. The Codex app-server authentication protocol spike is implemented against captured `codex-cli 0.146.1` schemas; production runner isolation and agent-turn execution remain incomplete. Claude subscription support is designed but release-blocked until Anthropic gives written approval for third-party Claude.ai authentication and subscription rate limits.
+**Design status:** proposed for OpenCloudOS 1.0. The Codex app-server authentication protocol and bounded stdio JSONL transport are implemented against `codex-cli 0.146.1`; process supervision, Credential Capsule isolation, approval bridging, and agent-turn execution remain incomplete. Claude subscription support is designed but release-blocked until Anthropic gives written approval for third-party Claude.ai authentication and subscription rate limits.
 
 This design lets each person connect an eligible Claude or ChatGPT/Codex subscription without turning OpenCloudOS into an OAuth implementation, a shared-token proxy, or a credential database.
 
@@ -13,11 +13,13 @@ This design lets each person connect an eligible Claude or ChatGPT/Codex subscri
 | AUTH-001 through AUTH-010 | Passing | Node contract suite; no production credentials |
 | Documentation enforcement | Implemented | Structural verifier and material-change policy in CI |
 | Codex app-server authentication Adapter | Protocol spike implemented | Pinned `codex-cli 0.146.1`; CODEX-001–008 pass on captured fixtures |
-| Codex app-server turn Adapter | Next | Provider Runner, stdio process transport, thread/turn mapping, and real test-account conformance |
+| Codex app-server stdio transport | Implemented | RUNNER-001–008 cover framing, correlation, redaction, resource bounds, shutdown, and fail-closed server requests |
+| Codex Provider Runner supervisor | Next | Pinned executable, capsule lifecycle, process health/restart, scope binding, and destruction |
+| Codex app-server turn Adapter | Planned after supervisor | Thread/turn mapping, explicit approval bridge, interruption, recovery, and real test-account conformance |
 | Production Credential Capsule | Planned | Process/filesystem/environment isolation not yet implemented |
 | Claude subscription Adapter | `blocked_by_policy` | [Anthropic request drafted](./provider-approval/ANTHROPIC_REQUEST_DRAFT.md), not sent |
 
-The current code is contract and auth-protocol evidence, not production subscription support. See the [Codex protocol spike](./CODEX_ADAPTER_SPIKE.md) and [compatibility matrix](./PROVIDER_COMPATIBILITY.md) for the release state.
+The current code is contract, auth-protocol, and transport evidence—not production subscription support. See the [Codex protocol spike](./CODEX_ADAPTER_SPIKE.md), [Provider Runner transport](./CODEX_RUNNER_TRANSPORT.md), and [compatibility matrix](./PROVIDER_COMPATIBILITY.md) for the release state.
 
 ## Product promise
 
@@ -67,7 +69,7 @@ The Interface never returns, accepts through a generic route, or logs raw access
 
 Provider-specific behavior lives behind Adapters:
 
-- **Codex Adapter:** one pinned `codex app-server` Provider Runner per Provider Connection. The implemented auth spike initializes with experimental APIs disabled, uses `account/login/start` with ChatGPT-managed device-code authentication, observes sanitized login completion, reads allowlisted account and rate-limit state, and asks app-server to log out. The production runner and thread/turn event mapping are not implemented.
+- **Codex Adapter:** one pinned `codex app-server` Provider Runner per Provider Connection. The implemented auth spike initializes with experimental APIs disabled, uses `account/login/start` with ChatGPT-managed device-code authentication, observes sanitized login completion, reads allowlisted account and rate-limit state, and asks app-server to log out. The implemented bounded stdio transport correlates JSONL messages and rejects server-initiated approvals by default. The production process supervisor, Credential Capsule, approval bridge, and thread/turn event mapping are not implemented.
 - **Claude Adapter:** one pinned Claude Agent SDK or Claude Code Provider Runner per Provider Connection. If Anthropic approves third-party subscription use, the official client owns interactive login. A headless `claude setup-token` may enter only through one-time sealed ingress directly into the credential capsule.
 - **API-funded Adapters:** API keys and cloud credentials are explicit connection modes with separate billing labels, policy, and secret rotation. They never masquerade as subscription connections.
 
@@ -151,7 +153,7 @@ No fixture uses a maintainer's personal production credential. Provider-approved
 
 1. **Policy and protocol spike — active:** Anthropic approval request drafted but unsent; Codex auth schemas pinned at `codex-cli 0.146.1`; CODEX-001–008 pass without external credentials. Claude client pin remains pending its approval boundary.
 2. **Provider-neutral skeleton — implemented:** Provider Runtime Broker, synthetic Adapter, and AUTH scenarios run without external credentials.
-3. **Codex vertical slice — next:** build the isolated Provider Runner and stdio transport; connect two approved test users through app-server device-code login; run turns; expose limit state; restart runners; and revoke.
+3. **Codex vertical slice — active:** bounded stdio transport implemented; next build the isolated Provider Runner supervisor and capsule, then connect two approved test users through device-code login, run turns, expose limit state, restart runners, and revoke.
 4. **Isolation hardening:** prove tool subprocesses cannot read credential storage or transport authority under malicious repository tests.
 5. **Claude approved slice:** only after written approval, connect provider-approved accounts through the official runner and execute the same suite.
 6. **Deployment profiles:** prove capsule storage, destruction, recovery, egress, and observability on local, AWS, GCP, Azure, and self-hosted profiles.

@@ -86,13 +86,14 @@ The device challenge expiry is currently a local 15-minute Broker deadline becau
 
 ## Next execution slice
 
-1. Build the Provider Runner supervisor around a pinned app-server artifact and stdio JSONL transport.
-2. Create one encrypted Credential Capsule per Provider Connection with separate filesystem, environment, process, and transport authority.
-3. Implement initialization recovery, process health, crash restart, and capsule deletion.
-4. Map Codex thread/turn requests and notifications into the provider-neutral event stream with explicit tool policy.
-5. Run two provider-approved test accounts through login, interleaved turns, limits, logout, restart, and revocation.
-6. Run hostile-repository tests against files, environment, process inspection, logs, traces, crash dumps, and tool subprocesses.
-7. Reinspect generated schemas, update the compatibility matrix, and rerun CODEX and AUTH suites on every client bump.
+1. **Implemented:** add the bounded stdio JSONL transport, redacted failures, and fail-closed server requests described in [Codex Provider Runner transport](./CODEX_RUNNER_TRANSPORT.md).
+2. Build the Provider Runner supervisor around that transport and a pinned app-server artifact.
+3. Create one encrypted Credential Capsule per Provider Connection with separate filesystem, environment, process, and transport authority.
+4. Implement initialization recovery, process health, crash restart, and capsule deletion.
+5. Map Codex thread/turn requests and notifications into the provider-neutral event stream with explicit tool policy.
+6. Run two provider-approved test accounts through login, interleaved turns, limits, logout, restart, and revocation.
+7. Run hostile-repository tests against files, environment, process inspection, logs, traces, crash dumps, and tool subprocesses.
+8. Reinspect generated schemas, update the compatibility matrix, and rerun RUNNER, CODEX, and AUTH suites on every client bump.
 
 Production support remains gated on TB-007, AUTH-001 through AUTH-010 against the real isolated runner, operational runbooks, and independent security review.
 

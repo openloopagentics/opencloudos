@@ -12,3 +12,4 @@ ADRs record hard-to-reverse tradeoffs. Their status is reflected in the public w
 | [0006](./0006-provider-variation-through-real-seams.md) | Put provider variation behind real seams | Proposed |
 | [0007](./0007-conformance-and-documentation-release-gates.md) | Make conformance and documentation release gates | Proposed |
 | [0008](./0008-provider-owned-subscription-auth.md) | Use provider-owned, user-bound subscription authentication | Proposed |
+| [0009](./0009-use-local-stdio-and-reject-unbound-provider-requests.md) | Use local stdio and reject unbound provider requests | Proposed |

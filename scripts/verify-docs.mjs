@@ -16,6 +16,7 @@ const requiredRecords = [
   "CONTEXT.md",
   "docs/ARCHITECTURE.md",
   "docs/CODEX_ADAPTER_SPIKE.md",
+  "docs/CODEX_RUNNER_TRANSPORT.md",
   "docs/DOCUMENTATION.md",
   "docs/EXECUTION_PLAN.md",
   "docs/PROJECT_LOG.md",
@@ -86,6 +87,14 @@ for (let scenario = 1; scenario <= 8; scenario += 1) {
   if (!codexTests.includes(id)) fail(`${id} is missing from the executable Codex Adapter suite`);
 }
 
+const runnerTransport = read("docs/CODEX_RUNNER_TRANSPORT.md");
+const runnerTests = read("packages/provider-runtime-broker/test/codex-jsonl-transport.test.ts");
+for (let scenario = 1; scenario <= 8; scenario += 1) {
+  const id = `RUNNER-${String(scenario).padStart(3, "0")}`;
+  if (!runnerTransport.includes(id)) fail(`${id} is missing from docs/CODEX_RUNNER_TRANSPORT.md`);
+  if (!runnerTests.includes(id)) fail(`${id} is missing from the executable Runner transport suite`);
+}
+
 if (!read("docs/PROJECT_LOG.md").includes("Provider Runtime Broker")) {
   fail("Project Log does not record the Provider Runtime Broker implementation");
 }
@@ -96,5 +105,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, and 8 CODEX scenarios verified`,
+  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, 8 CODEX scenarios, and 8 RUNNER scenarios verified`,
 );

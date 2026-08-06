@@ -20,6 +20,21 @@ export class CodexAppServerProtocolError extends BrokerError {
   }
 }
 
+export class CodexAppServerRpcError extends BrokerError {
+  constructor(
+    public readonly method: string,
+    public readonly rpcCode: number,
+  ) {
+    super("codex_app_server_rpc_error", `Codex app-server rejected ${method} with RPC code ${rpcCode}`);
+  }
+}
+
+export class CodexTransportClosedError extends BrokerError {
+  constructor(message = "Codex app-server transport is closed") {
+    super("codex_transport_closed", message);
+  }
+}
+
 export class CodexTurnProtocolUnavailableError extends BrokerError {
   constructor() {
     super(

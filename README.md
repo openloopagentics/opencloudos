@@ -15,6 +15,7 @@ provider profiles, decisions, and chronological project record.
 - [Execution plan](./docs/EXECUTION_PLAN.md)
 - [Subscription-backed agent providers](./docs/SUBSCRIPTION_AUTH.md)
 - [Codex app-server authentication spike](./docs/CODEX_ADAPTER_SPIKE.md)
+- [Codex Provider Runner transport](./docs/CODEX_RUNNER_TRANSPORT.md)
 - [Agent Provider compatibility](./docs/PROVIDER_COMPATIBILITY.md)
 - [Architecture decisions](./docs/adr/README.md)
 - [Documentation policy](./docs/DOCUMENTATION.md)

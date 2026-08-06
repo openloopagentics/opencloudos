@@ -2,6 +2,37 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-05 — Codex Provider Runner transport made fail-closed
+
+**Status:** shipped transport slice; process isolation and agent turns not supported
+
+Implemented the bounded stdio JSONL seam between the Codex app-server client and a future user-scoped Provider Runner. The transport follows the pinned `codex-cli 0.146.1` wire convention while keeping process launch, credential paths, environment, mounts, and network policy outside the Broker package.
+
+Behavior implemented:
+
+- concurrent requests use monotonically assigned IDs and resolve correctly when responses arrive out of order;
+- notifications remain separate from request-response correlation;
+- public RPC failures retain only the requested method and numeric code, discarding provider message and data;
+- malformed JSON, invalid UTF-8, unknown response IDs, invalid response unions, write failures, incomplete frames, and stream closure reject pending work and close;
+- Node stdout chunks are reassembled across fragmentation and split when multiple LF or CRLF frames arrive together;
+- input and output frames are limited to one MiB by default;
+- server-initiated requests, including command approvals, receive a fixed `-32601` response that echoes only the request ID and never sends an acceptance decision.
+
+Security boundaries recorded:
+
+- stdio remains inside the future Provider Runner; no WebSocket listener is used;
+- raw JSONL lines, provider error text, commands, paths, permission payloads, and tool arguments are not logged or copied into exceptions;
+- no child process was spawned and no Codex account, credential cache, login, model request, or subscription was touched;
+- server requests stay disabled until a reviewed Capability Broker and Prepared Action bridge can bind and audit every decision.
+
+Verification:
+
+- RUNNER-001 through RUNNER-008 pass, plus explicit stdin-write failure coverage;
+- prior AUTH and CODEX suites remain green;
+- documentation verification binds all RUNNER scenarios to their design and executable evidence.
+
+Related decision: ADR-0009. Detailed evidence: `docs/CODEX_RUNNER_TRANSPORT.md`. Next: Provider Runner supervisor lifecycle, pinned executable digest, per-connection scope binding, encrypted Credential Capsule, crash/orphan reconciliation, and only then thread/turn mapping.
+
 ## 2026-08-05 — Codex app-server authentication protocol made executable
 
 **Status:** shipped protocol spike; production execution not supported
