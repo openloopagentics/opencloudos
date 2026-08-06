@@ -51,7 +51,8 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | WS9 provider-neutral Broker | Implemented | Interface, policy registry, in-memory metadata store, normalized events, audit sink, and synthetic Adapter |
 | AUTH-001 through AUTH-010 | Passing on synthetic target | Ten deterministic tests; official-provider and process-isolation targets still required |
 | Anthropic approval package | Drafted, not sent | Maintainer must assign owner, review scope, and send through an approved channel |
-| Codex official Adapter | Next | Pin official client, run app-server device-code spike, and replace synthetic evidence with provider evidence |
+| Codex auth protocol Adapter | Implemented as fixture spike | `codex-cli 0.146.1` schema captured; CODEX-001–008 cover handshake, sanitation, device login, limits, logout, billing separation, and fail-closed turns |
+| Codex isolated runner + turn Adapter | Next | Supervise app-server over stdio in a Credential Capsule, map thread/turn events, and replace fixture evidence with approved test-account evidence |
 | Claude subscription Adapter | Blocked | Written Anthropic approval reference required before Adapter login can start |
 
 Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PROVIDER_COMPATIBILITY.md`, the Project Log, and the public wiki.
@@ -399,8 +400,8 @@ These issues are ordered to reduce uncertainty rather than maximize visible feat
 10. Define Artifact Repository interface; build filesystem and S3-compatible adapters.
 11. Implement generic OIDC and local development identity adapters.
 12. Define Provider Runtime Broker and implement a synthetic Adapter for AUTH-001 through AUTH-010.
-13. Spike Codex app-server managed device-code login without reading its credential cache.
-14. Build Provider Runner and Credential Capsule lifecycle, then implement TB-007 for Codex.
+13. **Implemented:** spike Codex app-server managed device-code login from generated `codex-cli 0.146.1` schemas without reading its credential cache or a real account.
+14. **Next:** build Provider Runner and Credential Capsule lifecycle, map app-server thread/turn events, then implement TB-007 for Codex.
 15. Enforce default-deny Gadget egress and malicious-repository credential isolation.
 16. Port the GitHub Gatekeeper through Capability Broker semantics.
 17. Implement prepared-action and approval state machines.

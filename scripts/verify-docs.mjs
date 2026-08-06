@@ -15,6 +15,7 @@ function fail(message) {
 const requiredRecords = [
   "CONTEXT.md",
   "docs/ARCHITECTURE.md",
+  "docs/CODEX_ADAPTER_SPIKE.md",
   "docs/DOCUMENTATION.md",
   "docs/EXECUTION_PLAN.md",
   "docs/PROJECT_LOG.md",
@@ -77,6 +78,14 @@ for (let scenario = 1; scenario <= 10; scenario += 1) {
   if (!brokerTests.includes(id)) fail(`${id} is missing from the executable Broker suite`);
 }
 
+const codexSpike = read("docs/CODEX_ADAPTER_SPIKE.md");
+const codexTests = read("packages/provider-runtime-broker/test/codex-adapter.test.ts");
+for (let scenario = 1; scenario <= 8; scenario += 1) {
+  const id = `CODEX-${String(scenario).padStart(3, "0")}`;
+  if (!codexSpike.includes(id)) fail(`${id} is missing from docs/CODEX_ADAPTER_SPIKE.md`);
+  if (!codexTests.includes(id)) fail(`${id} is missing from the executable Codex Adapter suite`);
+}
+
 if (!read("docs/PROJECT_LOG.md").includes("Provider Runtime Broker")) {
   fail("Project Log does not record the Provider Runtime Broker implementation");
 }
@@ -87,5 +96,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, and 10 AUTH scenarios verified`,
+  `documentation check: ${requiredRecords.length} records, ${sectionIds.length} wiki sections, ${adrFiles.length} ADRs, 10 AUTH scenarios, and 8 CODEX scenarios verified`,
 );

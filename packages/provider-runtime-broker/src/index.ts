@@ -1,4 +1,6 @@
 export * from "./broker.js";
+export * from "./codex-adapter.js";
+export * from "./codex-app-server-client.js";
 export * from "./contracts.js";
 export * from "./errors.js";
 export * from "./policy.js";

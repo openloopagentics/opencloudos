@@ -14,6 +14,21 @@ export class AdapterProtocolError extends BrokerError {
   }
 }
 
+export class CodexAppServerProtocolError extends BrokerError {
+  constructor(message: string) {
+    super("codex_app_server_protocol_error", message);
+  }
+}
+
+export class CodexTurnProtocolUnavailableError extends BrokerError {
+  constructor() {
+    super(
+      "codex_turn_protocol_unavailable",
+      "Codex turn execution is not implemented by the authentication protocol spike",
+    );
+  }
+}
+
 export class ConnectionNotFoundError extends BrokerError {
   constructor() {
     super("connection_not_found", "Provider connection not found");

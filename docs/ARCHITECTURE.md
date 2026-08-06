@@ -118,7 +118,7 @@ The agent provider plane runs official provider clients in per-user credential c
 - a provider turn records the initiating user and provider connection without recording credential material;
 - a provider-policy or entitlement failure fails closed and never falls back to a chargeable API key without explicit user consent.
 
-**Current Implementation:** the provider-neutral Interface, static policy registry, in-memory connection metadata Implementation, audit sink, and synthetic Adapter exist in `packages/provider-runtime-broker`. AUTH-001 through AUTH-010 pass on that synthetic target. This proves contract behavior only; the Codex Adapter, durable store, Provider Runner, and process-isolated Credential Capsule remain implementation work. Claude subscription login is blocked unless its policy decision includes a recorded approval reference.
+**Current Implementation:** the provider-neutral Interface, static policy registry, in-memory connection metadata Implementation, audit sink, and synthetic Adapter exist in `packages/provider-runtime-broker`. AUTH-001 through AUTH-010 pass on that synthetic target. An authentication-only Codex Adapter now pins captured `codex-cli 0.146.1` schemas and passes CODEX-001 through CODEX-008 for initialization, device login, raw-response sanitation, account and limit mapping, logout, billing separation, and fail-closed turn execution. This proves contract and auth-protocol behavior only; the durable store, real app-server process transport, Provider Runner, thread/turn mapping, and process-isolated Credential Capsule remain implementation work. Claude subscription login is blocked unless its policy decision includes a recorded approval reference.
 
 ### Capability Broker module
 
@@ -247,7 +247,7 @@ The agent provider plane runs official provider clients in per-user credential c
 5. Provider Runtime Broker receives only connection status, provider identity metadata permitted for display, entitlement mode, and reauthorization requirements.
 6. Audit Ledger records connection, reauthorization, logout, and revocation facts without authorization URLs, codes, tokens, or raw provider responses.
 
-Codex defaults to app-server device-code login for a remote deployment and may use its managed browser flow when the callback route is safely bound. Claude subscription login is not enabled in a public build until Anthropic approval is recorded. After approval, the Claude adapter must still use the official login or `claude setup-token` path rather than an OpenCloudOS OAuth client.
+Codex defaults to app-server device-code login for a remote deployment and may use its managed browser flow when the callback route is safely bound. The current spike implements only device-code auth mapping through an injected transport; it does not yet spawn app-server or run agent turns. The inspected response has no expiry field, so the displayed 15-minute challenge deadline is local replay protection, not a provider lifetime claim. Claude subscription login is not enabled in a public build until Anthropic approval is recorded. After approval, the Claude adapter must still use the official login or `claude setup-token` path rather than an OpenCloudOS OAuth client.
 
 ### Run an agent turn with a personal subscription
 

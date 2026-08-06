@@ -315,7 +315,7 @@ h3 { letter-spacing: -0.02em; }
 .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .test-grid article { min-height: 172px; padding: 20px; border: 1px solid var(--line); background: rgba(8, 18, 15, 0.7); }
 .test-status { width: fit-content; padding: 3px 6px; border: 1px solid #406849; color: var(--green); font: 500 7px var(--mono); }
-.auth-status-grid { margin-bottom: 18px; grid-template-columns: repeat(4, 1fr); }
+.auth-status-grid { margin-bottom: 18px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .auth-status-grid article { min-height: 195px; }
 .auth-status-grid .blocked-status { border-color: #685333; color: var(--amber); }
 .test-grid h3 { margin: 42px 0 7px; font-size: 14px; }

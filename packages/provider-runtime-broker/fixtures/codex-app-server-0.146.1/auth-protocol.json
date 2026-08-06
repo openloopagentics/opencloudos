@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "cliVersion": "0.146.1",
+    "schemaRevision": "codex-cli-0.146.1",
+    "generatedWith": "codex app-server generate-json-schema",
+    "capturedAt": "2026-08-05",
+    "transport": "stdio JSONL",
+    "interfaceStatus": "experimental"
+  },
+  "initialize": {
+    "codexHome": "/credential-capsule/codex",
+    "platformFamily": "unix",
+    "platformOs": "linux",
+    "userAgent": "codex_cli_rs/0.146.1"
+  },
+  "loggedOutAccount": {
+    "account": null,
+    "requiresOpenaiAuth": true
+  },
+  "chatgptAccount": {
+    "account": {
+      "type": "chatgpt",
+      "email": "never-expose@example.invalid",
+      "planType": "plus",
+      "syntheticAccessToken": "fixture-token-must-not-escape"
+    },
+    "requiresOpenaiAuth": true
+  },
+  "apiKeyAccount": {
+    "account": {
+      "type": "apiKey"
+    },
+    "requiresOpenaiAuth": true
+  },
+  "deviceLogin": {
+    "type": "chatgptDeviceCode",
+    "loginId": "codex-login-fixture-1",
+    "verificationUrl": "https://auth.openai.example/device",
+    "userCode": "OPEN-CLOUD"
+  },
+  "healthyRateLimits": {
+    "rateLimits": {
+      "limitId": "codex",
+      "limitName": "Codex",
+      "planType": "plus",
+      "primary": {
+        "usedPercent": 20,
+        "resetsAt": 1785952800,
+        "windowDurationMins": 300
+      },
+      "secondary": null,
+      "rateLimitReachedType": null,
+      "spendControlReached": false
+    },
+    "rateLimitsByLimitId": null,
+    "rateLimitResetCredits": null
+  },
+  "reachedRateLimits": {
+    "rateLimits": {
+      "limitId": "codex",
+      "limitName": "Codex five-hour limit",
+      "planType": "plus",
+      "primary": {
+        "usedPercent": 100,
+        "resetsAt": 1785952800,
+        "windowDurationMins": 300
+      },
+      "secondary": null,
+      "rateLimitReachedType": "rate_limit_reached",
+      "spendControlReached": false
+    },
+    "rateLimitsByLimitId": null,
+    "rateLimitResetCredits": null
+  },
+  "logout": {}
+}

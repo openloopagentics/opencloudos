@@ -31,7 +31,7 @@ type LoginBinding = UserScope & {
 
 const transitions: Record<ConnectionState, ReadonlySet<ConnectionState>> = {
   disconnected: new Set(["connecting", "revoked"]),
-  connecting: new Set(["connecting", "ready", "reauth_required", "blocked_by_policy", "disconnected", "revoked"]),
+  connecting: new Set(["connecting", "ready", "reauth_required", "rate_limited", "blocked_by_policy", "disconnected", "revoked"]),
   ready: new Set(["ready", "reauth_required", "rate_limited", "disconnected", "revoked"]),
   reauth_required: new Set(["reauth_required", "connecting", "ready", "disconnected", "revoked"]),
   rate_limited: new Set(["rate_limited", "ready", "reauth_required", "disconnected", "revoked"]),
@@ -156,7 +156,7 @@ export class ProviderRuntimeBroker {
     const updated = await this.#applySnapshot(connection, started.snapshot);
 
     if (started.kind === "connected") {
-      await this.#audit(scope, updated, "provider.connection.completed", "ready");
+      await this.#audit(scope, updated, "provider.connection.completed", updated.state);
       return { kind: "connected", connection: updated };
     }
 

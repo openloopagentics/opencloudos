@@ -2,6 +2,40 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-05 — Codex app-server authentication protocol made executable
+
+**Status:** shipped protocol spike; production execution not supported
+
+Inspected the installed `codex-cli 0.146.1` app-server command and generated JSON schemas in a temporary directory without starting a login or reading the current Codex account. Added a narrow app-server client, authentication-only Codex Adapter, captured fixture, and eight executable CODEX scenarios.
+
+Behavior implemented:
+
+- exactly one app-server `initialize` handshake precedes account methods and opts out of experimental APIs;
+- managed ChatGPT device-code login maps to the Broker challenge without accepting raw auth tokens;
+- device authorization links are rejected unless they are valid HTTPS URLs;
+- account email, app-server paths, unknown fields, and fixture token sentinels are removed by explicit allowlists;
+- ChatGPT plan and provider-reported limit/reset state map into provider-neutral connection state;
+- login completion is bound to the opaque provider login ID and provider error text does not escape;
+- API-key account state cannot satisfy subscription billing mode;
+- logout calls the official app-server method;
+- agent turns fail closed with a typed error because thread/turn execution is not part of this slice.
+
+Boundaries recorded:
+
+- the inspected app-server Interface is experimental and pinned to this schema revision;
+- the transport is injected so only a future user-scoped Provider Runner may own real stdio and raw responses;
+- no app-server process supervisor, Credential Capsule, real provider login, token, subscription spend, or hostile-tool isolation claim exists yet;
+- the 15-minute displayed device-challenge expiry is a local Broker deadline because the inspected response has no expiry field.
+
+Verification:
+
+- CODEX-001 through CODEX-008 pass on synthetic fixtures;
+- AUTH-001 through AUTH-010 continue to pass;
+- documentation verification now binds all eight CODEX scenario IDs to their design record and test suite;
+- no real provider credential or existing Codex account was used.
+
+Detailed evidence: `docs/CODEX_ADAPTER_SPIKE.md`. Next: isolated app-server stdio supervision, encrypted per-user capsule, thread/turn event mapping, and approved test-account TB-007 evidence.
+
 ## 2026-08-05 — Provider Runtime Broker contract made executable
 
 **Status:** shipped implementation slice
