@@ -4,8 +4,21 @@ A living research and architecture guide for building a portable, self-hosted
 distribution of [Cloudflare OS](https://github.com/cloudflare/cloudflare-os).
 
 The wiki documents the upstream system, its portability gap, the proposed
-cross-cloud architecture, security invariants, delivery roadmap, provider
-profiles, and open decisions.
+cross-cloud architecture, security invariants, detailed execution plan,
+provider profiles, decisions, and chronological project record.
+
+## Project documentation
+
+- [Domain language](./CONTEXT.md)
+- [Documentation index](./docs/INDEX.md)
+- [System architecture](./docs/ARCHITECTURE.md)
+- [Execution plan](./docs/EXECUTION_PLAN.md)
+- [Architecture decisions](./docs/adr/README.md)
+- [Documentation policy](./docs/DOCUMENTATION.md)
+- [Project log](./docs/PROJECT_LOG.md)
+
+Every material change must update the relevant source document, the public
+wiki, and the project log in the same pull request.
 
 > **Naming note:** OpenCloudOS is already the name of an established Linux
 > distribution. This repository name should be treated as a working codename
