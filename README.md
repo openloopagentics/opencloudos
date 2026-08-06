@@ -13,6 +13,7 @@ provider profiles, decisions, and chronological project record.
 - [Documentation index](./docs/INDEX.md)
 - [System architecture](./docs/ARCHITECTURE.md)
 - [Execution plan](./docs/EXECUTION_PLAN.md)
+- [Subscription-backed agent providers](./docs/SUBSCRIPTION_AUTH.md)
 - [Architecture decisions](./docs/adr/README.md)
 - [Documentation policy](./docs/DOCUMENTATION.md)
 - [Project log](./docs/PROJECT_LOG.md)

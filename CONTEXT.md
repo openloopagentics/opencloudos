@@ -30,6 +30,24 @@ _Avoid_: Template, executable
 A bounded conversation and execution history through which an agent acts for a user inside a workspace.
 _Avoid_: Agent, chat, run
 
+### Agent access
+
+**Agent Provider**:
+An external vendor runtime that supplies model inference and an agent execution loop through a documented, operator-approved integration path.
+_Avoid_: Model, LLM, backend
+
+**Provider Connection**:
+A user-owned link to one agent provider, including its authentication status, entitlement mode, and revocation state but never its raw credential material.
+_Avoid_: OAuth token, account, API key
+
+**Provider Runner**:
+An isolated process or container running an official provider client for one provider connection and its agent sessions.
+_Avoid_: Model proxy, shared worker, agent
+
+**Credential Capsule**:
+The per-user storage and execution envelope in which an official provider client owns, refreshes, and deletes credential material without exposing it to the product plane, workspace, gadget, model context, or tool subprocess.
+_Avoid_: Token database, shared secret, auth file
+
 ### Authority
 
 **Capability**:
@@ -92,6 +110,10 @@ _Avoid_: Unit test, parity test
 - A **Workspace** is served by exactly one valid **Placement** at a time
 - A **Placement** names one **Runtime Shard** and is protected by one current **Placement Lease**
 - A **Workspace** contains zero or more **Gadgets** and **Agent Sessions**
+- A **User** owns zero or more **Provider Connections**, each for one **Agent Provider**
+- A personal **Provider Connection** is never shared, pooled, introduced, or delegated to another user
+- An **Agent Session** records which user's **Provider Connection** funds each provider turn
+- A **Provider Runner** serves one **Provider Connection** inside one **Credential Capsule**
 - A **Blueprint** creates a new **Gadget** but never shares the source gadget's state or capabilities
 - An **Introduction** grants exactly one **Capability** to one **Agent Session** or **Gadget**
 - A **Gatekeeper** realizes one or more capability types for an external system
@@ -110,9 +132,15 @@ _Avoid_: Unit test, parity test
 >
 > **Domain expert:** "The gatekeeper creates a prepared action. The user records an approval decision, and only then may the gatekeeper commit it and append the outcome to the audit history."
 
+> **Developer:** "Can a collaborator continue an agent session using the workspace owner's Claude or Codex subscription?"
+>
+> **Domain expert:** "They can read the shared history, but a new provider turn uses the initiating user's own provider connection. Personal subscriptions are never pooled. A tenant-funded API connection is a separate, explicitly governed connection type."
+
 ## Flagged ambiguities
 
 - "Agent" previously meant both the durable workspace actor and a conversation; resolved: use **Workspace** for durable ownership and **Agent Session** for one conversation and execution history.
 - "Binding" previously meant runtime dependency injection and user-granted authority; resolved: use adapter configuration for runtime wiring and **Introduction** for authority.
 - "Account" previously meant tenant, user identity, and connected external identity; resolved: use **Tenant**, **User**, or a gatekeeper's external identity explicitly.
 - "App" previously meant the overall product and a generated application; resolved: use OpenCloudOS for the product and **Gadget** for generated applications.
+- "OAuth token" previously meant both a vendor credential and a product connection; resolved: product code handles a **Provider Connection**, while credential material remains inside the **Credential Capsule**.
+- "Model provider" previously collapsed model inference, agent-loop behavior, billing, and authentication; resolved: use **Agent Provider** for the vendor runtime and name API-key inference separately when that narrower path is intended.

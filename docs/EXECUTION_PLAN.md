@@ -11,6 +11,7 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 - installs locally and on conforming Kubernetes clusters;
 - provides supported AWS, GCP, Azure, and self-hosted deployment profiles;
 - recovers a failed runtime shard without silent workspace-state loss;
+- lets each user run agent turns through an eligible personal Codex subscription, with Claude subscription support enabled only after required provider approval;
 - passes a shared behavioral suite against the upstream Cloudflare deployment;
 - documents every material behavior, decision, operational consequence, and shipped change in the wiki.
 
@@ -23,6 +24,8 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 - supporting every upstream Gatekeeper at launch;
 - hiding infrastructure cost or operational responsibility from the operator;
 - a custom identity protocol, secret store, database, or object store.
+- sharing, pooling, reselling, or silently falling back from a personal provider subscription;
+- reverse-engineered Claude or Codex OAuth flows, copied credential caches, or generic browser-token import.
 
 ## Program assumptions
 
@@ -36,6 +39,7 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | Control metadata | PostgreSQL 16+ |
 | Local object storage | MinIO or filesystem adapter |
 | Authentication | OIDC plus local development adapter |
+| Agent provider access | Per-user Provider Connections through pinned official clients; explicit API-funded fallbacks |
 | Observability | OpenTelemetry / OTLP |
 | Release channels | nightly, preview, stable |
 
@@ -192,6 +196,25 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 
 **Depends on:** continuous across the program.
 
+### WS9 — Agent providers and subscription access
+
+**Mission:** let every user connect and spend their own eligible agent-provider subscription without exposing credentials, pooling usage, or bypassing vendor policy.
+
+**Deliverables:**
+
+- Provider Runtime Broker interface and synthetic Adapter;
+- per-user Provider Runner and encrypted Credential Capsule lifecycle;
+- Codex app-server Adapter with ChatGPT-managed device-code/browser login, status, rate limits, logout, and restart behavior;
+- API-key and cloud-provider modes presented as explicit, separately billed connections;
+- Claude Agent SDK/Claude Code Adapter implemented behind an unbypassable approval gate;
+- provider compatibility matrix with client versions, supported plans, policy-review date, and deviations;
+- AUTH-001 through AUTH-010 conformance scenarios and malicious-repository isolation fixtures;
+- Anthropic third-party approval request and recorded outcome.
+
+**Exit evidence:** two users collaborate in one workspace, connect separate provider test accounts, run interleaved turns, hit and recover from limit/reauthorization states, restart Provider Runners, and revoke connections without enumerating or spending each other's authority or exposing credential material. Claude subscription evidence is required only after written Anthropic approval; without approval the mode remains visibly blocked.
+
+**Depends on:** policy work begins in WS0; implementation depends on WS1 and WS3. Security-critical release blocker for every enabled subscription mode.
+
 ## Critical path
 
 ```text
@@ -199,11 +222,12 @@ WS0 upstream baseline
   └─ WS1 Runtime Host
       ├─ WS2 state inventory + restore
       ├─ WS3 identity + tenancy
+      │   └─ WS9 provider connections + credential capsules
       └─ WS4 capability parity
             └─ WS5 placement + routing
                   └─ WS6 provider profiles
 
-WS7 conformance and WS8 documentation run across every step.
+WS7 conformance and WS8 documentation run across every step. WS9 starts provider-policy work in M0 and joins the technical critical path after identity exists.
 ```
 
 The most important uncertainty is WS1: whether standalone workerd exposes every runtime semantic currently used by upstream Cloudflare OS in a production-usable form. The program does not commit to the Kubernetes control plane until the Milestone 1 runtime spike passes.
@@ -220,6 +244,7 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 - upstream source strategy and license inventory complete;
 - monorepo/toolchain direction recorded;
 - initial threat model and conformance scenario catalog;
+- provider-auth support matrix, Anthropic approval request, and ADR-0008 reviewed;
 - CI builds the wiki and validates source, license, secrets, and documentation expectations.
 
 **Exit gate:** a new contributor can explain the system, run the current wiki, locate every decision, and pick up a scoped tracer-bullet issue.
@@ -235,6 +260,7 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 - local persistence survives process restart;
 - runtime feature inventory classifies supported, emulated, blocked, and deferred semantics;
 - no Cloudflare account is required for the demonstrated slice.
+- Provider Runtime Broker synthetic Adapter proves user ownership and event normalization without production credentials.
 
 **Exit gate:** TB-001 and TB-002 pass. Any missing workerd primitive has a measured workaround or a decision to change scope. Failure at this gate reopens ADR-0003 before further platform investment.
 
@@ -245,13 +271,15 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 **Outcomes:**
 
 - generic OIDC and tenant model;
+- Codex app-server subscription connection for two test users, including device-code login, limit state, logout, and runner restart;
+- Claude subscription mode visibly blocked unless written Anthropic approval has been recorded;
 - Artifact Repository with local and S3-compatible adapters;
 - default-deny Gadget egress;
 - GitHub Gatekeeper read capability and approval-gated write capability;
 - audit ledger and backup/restore;
 - Docker Compose installation.
 
-**Exit gate:** TB-003 passes, the single-node conformance suite is green, backup/restore succeeds, and the threat model has no unmitigated critical finding.
+**Exit gate:** TB-003 and TB-007 pass, the single-node conformance suite is green, backup/restore succeeds, AUTH-001 through AUTH-010 pass for every enabled provider mode, and the threat model has no unmitigated critical finding.
 
 ### M3 — Kubernetes alpha
 
@@ -276,6 +304,7 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 
 - supported self-hosted, AWS, GCP, and Azure profiles;
 - secret-store and object-store adapters for each profile;
+- Credential Capsule storage, destruction, recovery, and egress behavior for each profile;
 - signed images, SBOM, provenance, dashboards, alerts, and SLO draft;
 - upgrade and rollback rehearsal;
 - operator installation study.
@@ -293,6 +322,7 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 - disaster-recovery rehearsal with recorded RPO/RTO;
 - support policy, upgrade window, and deprecation policy;
 - complete administrator, contributor, and Gatekeeper author documentation.
+- current agent-provider compatibility matrix and provider-policy review.
 
 **Exit gate:** all stable-release gates pass, no critical known deviation is hidden, and two independent operators complete install, upgrade, backup, and restore from documentation alone.
 
@@ -334,30 +364,42 @@ The most important uncertainty is WS1: whether standalone workerd exposes every 
 
 **Acceptance:** identical product/runtime images; only adapters and infrastructure values differ; conformance results and cost envelope published.
 
+### TB-007 — Connect and isolate personal subscriptions
+
+**Outcome:** two users in one shared workspace connect separate Codex test subscriptions and run interleaved agent turns through dedicated Provider Runners. The Claude path reports `blocked_by_policy` until written approval exists, then must pass the same slice before enablement.
+
+**Acceptance:** official client login only; per-user connection ownership; no cross-user enumeration or spend; credentials absent from workspace files, environments, processes, prompts, logs, traces, and audit; explicit subscription billing label; visible rate limit; runner restart; logout and revocation; no implicit API-key fallback; AUTH-001 through AUTH-010 automated.
+
 ## First implementation queue
 
 These issues are ordered to reduce uncertainty rather than maximize visible features.
 
 1. Vendor or track the upstream source snapshot with license and patch provenance.
-2. Create the pinned workerd runtime image and minimal production configuration.
-3. Inventory every upstream use of Durable Objects, Facets, Worker Loader, KV, R2, browser, and service RPC.
-4. Define the Runtime Host interface from observed caller needs and failure modes.
-5. Implement TB-001 with a production health check and smoke scenario.
-6. Specify shard-volume layout, state manifest, and corruption behavior.
-7. Implement TB-002 and restart conformance.
-8. Define Artifact Repository interface; build filesystem and S3-compatible adapters.
-9. Implement generic OIDC and local development identity adapters.
-10. Enforce default-deny Gadget egress and test escape attempts.
-11. Port the GitHub Gatekeeper through Capability Broker semantics.
-12. Implement prepared-action and approval state machines.
-13. Add the Audit Ledger and privileged fail-closed behavior.
-14. Ship Docker Compose preview with backup and restore.
-15. Define Placement Registry schema and property tests for lease epochs.
-16. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
-17. Build Shard Controller and Helm alpha.
-18. Add shard fault injection and TB-005.
-19. Add provider adapters and deployment profiles one at a time behind the same tests.
-20. Run release-candidate security and operator validation.
+2. Request Anthropic approval for third-party Claude.ai login and subscription limits; record the response without blocking other work.
+3. Pin official Codex and Claude clients and publish the first provider compatibility matrix.
+4. Create the pinned workerd runtime image and minimal production configuration.
+5. Inventory every upstream use of Durable Objects, Facets, Worker Loader, KV, R2, browser, and service RPC.
+6. Define the Runtime Host interface from observed caller needs and failure modes.
+7. Implement TB-001 with a production health check and smoke scenario.
+8. Specify shard-volume layout, state manifest, and corruption behavior.
+9. Implement TB-002 and restart conformance.
+10. Define Artifact Repository interface; build filesystem and S3-compatible adapters.
+11. Implement generic OIDC and local development identity adapters.
+12. Define Provider Runtime Broker and implement a synthetic Adapter for AUTH-001 through AUTH-010.
+13. Spike Codex app-server managed device-code login without reading its credential cache.
+14. Build Provider Runner and Credential Capsule lifecycle, then implement TB-007 for Codex.
+15. Enforce default-deny Gadget egress and malicious-repository credential isolation.
+16. Port the GitHub Gatekeeper through Capability Broker semantics.
+17. Implement prepared-action and approval state machines.
+18. Add the Audit Ledger and privileged fail-closed behavior.
+19. Ship Docker Compose preview with backup, restore, capsule destruction, and reauthorization.
+20. Define Placement Registry schema and property tests for lease epochs.
+21. Build Request Gateway routing without WebSocket support, then add reconnect semantics.
+22. Build Shard Controller and Helm alpha.
+23. Add shard fault injection and TB-005.
+24. Add provider adapters and deployment profiles one at a time behind the same tests.
+25. If Anthropic approval exists, enable Claude subscription mode only after TB-007 and independent security review pass.
+26. Run release-candidate security and operator validation.
 
 ## Release gates
 
@@ -367,6 +409,11 @@ Every preview or stable release must satisfy:
 - license notices, SBOM, and provenance are present;
 - all required conformance scenarios pass or have a published, approved deviation;
 - Gadget egress and capability-attenuation tests pass;
+- AUTH-001 through AUTH-010 pass for every enabled Agent Provider mode;
+- each subscription mode has current official documentation, pinned client evidence, and required provider approval;
+- no personal Provider Connection can be enumerated, delegated, or spent by another user;
+- no provider credential is observable from workspace code, tool execution, product state, telemetry, or audit;
+- billing mode is explicit and no subscription-to-API fallback occurs without user consent;
 - backup artifacts restore successfully in a clean environment;
 - migrations have forward, rollback, and interrupted-run evidence;
 - release images are signed;
@@ -392,11 +439,12 @@ A work item is done only when:
 2. The owning module and interface are clear.
 3. Success, error, retry, ordering, and security semantics are tested at that interface.
 4. Metrics, traces, and audit consequences are implemented where applicable.
-5. Upgrade, rollback, and recovery effects are understood.
-6. Domain language and ADRs are updated if the change introduces either.
-7. Architecture and execution documentation reflect the resulting system.
-8. The public wiki and project log are updated in the same pull request.
-9. CI and the relevant conformance target pass.
+5. Agent-provider work proves credential isolation, per-user billing authority, logout, revocation, rate limits, and policy status.
+6. Upgrade, rollback, and recovery effects are understood.
+7. Domain language and ADRs are updated if the change introduces either.
+8. Architecture and execution documentation reflect the resulting system.
+9. The public wiki and project log are updated in the same pull request.
+10. CI and the relevant conformance target pass.
 
 ## Metrics
 
@@ -407,6 +455,10 @@ A work item is done only when:
 - active WebSocket sessions and reconnect success;
 - sandbox policy violations;
 - agent model request latency, tokens, and cost by tenant policy.
+- provider connections by mode and sanitized state;
+- provider login, reauthorization, logout, and revocation success;
+- provider rate-limit events and reset duration by user-visible mode;
+- Provider Runner cold start, restart, session resume, and cancellation success;
 
 ### Control plane
 
@@ -441,10 +493,17 @@ A work item is done only when:
 | Split-brain workspace writes | Fault test acknowledges two epochs | Strengthen fencing at storage open and request paths | Block Kubernetes alpha |
 | Gatekeeper simulation drift | Prepared actions conflict frequently | Improve fingerprinting, preview language, and expiry | Disable deferred approval per operation if unsafe |
 | Provider adapter leakage | Core module imports provider SDK | Move behavior behind an existing real seam | Block profile merge |
+| Personal credential exposure | Tool fixture reads credential file, environment, process, transport, log, or trace | Stop release; redesign capsule isolation and rotate test credential | Block every subscription mode |
+| Cross-user subscription spend | Collaborator turn resolves another user's connection | Enforce initiating-user ownership at Broker and session state | Security incident and release blocker |
+| Claude approval absent or withdrawn | No written approval, or provider policy changes | Keep or move mode to `blocked_by_policy`; offer explicit API/cloud modes | Never enable based on technical feasibility alone |
+| Official client drift | Login, event, rate-limit, or logout fixture changes | Hold pinned version; update Adapter and compatibility record | Block client upgrade and stable release |
+| Silent billing fallback | Environment API key overrides subscription or runner changes mode | Sanitize runner environment and require explicit connection selection | Block provider mode |
 | Recovery too slow | Volume attach or replay exceeds SLO | Revisit shard size, snapshots, and placement units | Repartition before stable |
 | Documentation drift | Code behavior differs from wiki | Required checks and owner review | Block release |
 | Name conflict | Community or legal review rejects OpenCloudOS | Rename before package and domain ecosystem hardens | Must resolve before public 1.0 branding |
 
 ## Immediate next decision
 
-Milestone 0 must decide how upstream source is tracked: a history-preserving fork, a vendor subtree with a patch queue, or a package-level downstream. The default recommendation is a history-preserving fork plus explicit portability patches because it maximizes upstream merge visibility. That choice should be validated against Cloudflare's repository contribution posture and the expected size of runtime changes before implementation begins.
+Milestone 0 has two immediate decisions. First, decide how upstream source is tracked: a history-preserving fork, a vendor subtree with a patch queue, or a package-level downstream. The default recommendation remains a history-preserving fork plus explicit portability patches because it maximizes upstream merge visibility.
+
+Second, submit the Anthropic third-party approval request and record its exact scope. This request does not block the provider-neutral Broker, Codex Adapter, synthetic AUTH suite, or Claude API/cloud Adapters. It does block enabling Claude subscription authentication in any public or hosted distribution. Technical success with `claude setup-token` is not approval.

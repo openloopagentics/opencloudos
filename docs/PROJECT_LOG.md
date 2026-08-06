@@ -2,6 +2,30 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-05 — Personal Claude and Codex access designed
+
+**Status:** shipped design; implementation planned
+
+Added user-owned Agent Provider access so people can use eligible subscriptions without turning OpenCloudOS into an OAuth client or shared credential proxy. Defined Provider Connection, Provider Runner, Credential Capsule, and the Provider Runtime Broker module. Added provider-specific support and policy matrix, connection and agent-turn flows, lifecycle and failure semantics, ten AUTH conformance scenarios, WS9, TB-007, execution-queue changes, and release gates.
+
+Decisions and constraints introduced:
+
+- Codex subscription access uses a pinned `codex app-server` Adapter with ChatGPT-managed browser or device-code authentication;
+- personal Provider Connections belong to one Tenant and User and cannot be introduced, delegated, pooled, or spent by collaborators;
+- official provider clients own credential exchange, storage, refresh, and logout inside per-user Credential Capsules;
+- OpenCloudOS never parses provider credential caches or exposes generic OAuth token import;
+- Claude subscription support remains `blocked_by_policy` until Anthropic grants written approval for third-party Claude.ai login and subscription rate limits;
+- API-key and cloud-provider access remain explicit, separately billed modes with no silent fallback.
+
+Verification:
+
+- current first-party OpenAI Codex and Anthropic Claude authentication documentation reviewed;
+- architecture, execution plan, domain context, ADR, documentation policy, pull-request checklist, and public wiki updated together;
+- TypeScript production and GitHub Pages subpath builds;
+- documentation consistency and broken-link inspection.
+
+Related decision: ADR-0008. Detailed design: `docs/SUBSCRIPTION_AUTH.md`.
+
 ## 2026-08-05 — Detailed execution design
 
 **Status:** shipped

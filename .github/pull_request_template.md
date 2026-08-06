@@ -11,6 +11,7 @@
 - [ ] The owning module and its interface are clear.
 - [ ] Invariants, error modes, retries, ordering, and recovery are tested.
 - [ ] Tenant, capability, credential, audit, and egress effects were reviewed.
+- [ ] Agent-provider changes preserve per-user connection ownership, official-client credential custody, explicit billing mode, and vendor-policy gates.
 - [ ] Provider-specific behavior remains inside an adapter at a real seam.
 - [ ] No new hard-to-reverse decision was made, or an ADR is linked below.
 

@@ -7,6 +7,7 @@ The public [architecture wiki](https://openloopagentics.github.io/opencloudos/) 
 - [Domain context](../CONTEXT.md) — canonical project language
 - [System architecture](./ARCHITECTURE.md) — modules, state ownership, flows, and failure semantics
 - [Execution plan](./EXECUTION_PLAN.md) — workstreams, milestones, backlog, and release gates
+- [Subscription-backed agent providers](./SUBSCRIPTION_AUTH.md) — Claude/Codex connection design, policy gates, isolation, and conformance
 - [Documentation policy](./DOCUMENTATION.md) — the rule that every material change updates the wiki
 - [Project log](./PROJECT_LOG.md) — chronological record of research, decisions, and delivery
 

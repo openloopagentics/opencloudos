@@ -23,6 +23,7 @@ When code and documentation disagree, the pull request must resolve the disagree
 | Milestone scope or dependency change | `docs/EXECUTION_PLAN.md` and wiki execution plan |
 | Provider adapter or operational behavior | Architecture, deployment profile, and runbook content |
 | Security behavior | Threat model, conformance scenario, and relevant ADR |
+| Agent provider authentication, entitlement, or billing behavior | `docs/SUBSCRIPTION_AUTH.md`, architecture, compatibility matrix, conformance scenario, and relevant ADR |
 | User-visible capability | Product model, acceptance criteria, and project log |
 | Any merged pull request | `docs/PROJECT_LOG.md` entry or explicit `docs-not-needed` rationale |
 
