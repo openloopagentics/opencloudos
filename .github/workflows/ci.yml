@@ -1,0 +1,41 @@
+name: Continuous integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run contract, documentation, and wiki checks
+        run: npm test
+
+      - name: Enforce documentation change policy
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          DOCS_NOT_NEEDED: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'docs-not-needed') }}
+        run: node scripts/check-documentation-change.mjs "$BASE_SHA" "$HEAD_SHA"

@@ -2,6 +2,41 @@
 
 This log records material OpenCloudOS research, design, implementation, and operational changes. It is chronological and append-only except for correcting factual errors.
 
+## 2026-08-05 — Provider Runtime Broker contract made executable
+
+**Status:** shipped implementation slice
+
+Implemented the first provider-neutral production-code seam in `packages/provider-runtime-broker`. Added the Broker Interface, static policy registry, in-memory Provider Connection store, normalized public events, secret-free audit sink, one-time login bindings, lifecycle transitions, and a synthetic Agent Provider Adapter.
+
+Security behavior implemented:
+
+- unknown and unauthorized Provider Connection references have the same public failure shape;
+- every connection and turn verifies Tenant and User ownership;
+- Adapter snapshots and events are copied through explicit allowlists;
+- login references bind User, Tenant, Provider Connection, and one completion;
+- Claude subscription login stays blocked when configuration says enabled but no approval reference exists;
+- restored metadata without Credential Capsule state becomes `reauth_required` rather than reconstructing authority;
+- logout and revocation remove the synthetic credential fixture and stop new turns;
+- rate limits never change billing mode.
+
+Delivery controls implemented:
+
+- AUTH-001 through AUTH-010 run as deterministic Node tests without real credentials;
+- documentation integrity checks validate required records, relative links, wiki navigation, ADR registration, and scenario coverage;
+- CI enforces wiki, Project Log, and architecture records for material implementation or operational changes;
+- GitHub checkout and Node setup Actions moved to their Node 24-based v6 releases;
+- provider compatibility matrix published;
+- Anthropic approval request drafted but not sent.
+
+Verification:
+
+- ten Broker contract tests passed;
+- documentation integrity suite passed;
+- TypeScript and production wiki build passed;
+- no production provider credential used.
+
+Related decision: ADR-0008. The Codex official-client Adapter and production Credential Capsule are the next technical slice.
+
 ## 2026-08-05 — Personal Claude and Codex access designed
 
 **Status:** shipped design; implementation planned

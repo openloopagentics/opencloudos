@@ -8,8 +8,10 @@ Documentation is part of the OpenCloudOS product and its engineering control sys
 2. `docs/adr/` owns hard-to-reverse decisions and their rationale.
 3. `docs/ARCHITECTURE.md` owns current system shape, invariants, state, flows, and failure behavior.
 4. `docs/EXECUTION_PLAN.md` owns milestones, workstreams, sequencing, and exit gates.
-5. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
-6. The public wiki renders the important parts of all five for readers.
+5. `docs/SUBSCRIPTION_AUTH.md` owns agent-provider connection, credential-isolation, billing-authority, and AUTH behavior.
+6. `docs/PROVIDER_COMPATIBILITY.md` owns the time-sensitive provider support and policy matrix.
+7. `docs/PROJECT_LOG.md` owns the chronological record of completed work.
+8. The public wiki renders the important parts of these records for readers.
 
 When code and documentation disagree, the pull request must resolve the disagreement before merge. Neither side silently wins.
 

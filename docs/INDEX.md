@@ -8,6 +8,8 @@ The public [architecture wiki](https://openloopagentics.github.io/opencloudos/) 
 - [System architecture](./ARCHITECTURE.md) — modules, state ownership, flows, and failure semantics
 - [Execution plan](./EXECUTION_PLAN.md) — workstreams, milestones, backlog, and release gates
 - [Subscription-backed agent providers](./SUBSCRIPTION_AUTH.md) — Claude/Codex connection design, policy gates, isolation, and conformance
+- [Agent Provider compatibility](./PROVIDER_COMPATIBILITY.md) — current support state, official paths, client pins, and evidence gaps
+- [Anthropic approval request draft](./provider-approval/ANTHROPIC_REQUEST_DRAFT.md) — unsent request and maintainer checklist
 - [Documentation policy](./DOCUMENTATION.md) — the rule that every material change updates the wiki
 - [Project log](./PROJECT_LOG.md) — chronological record of research, decisions, and delivery
 

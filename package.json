@@ -9,7 +9,9 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "npm run build"
+    "test": "npm run test:broker && npm run test:docs && npm run build",
+    "test:broker": "tsc -p tsconfig.test.json && node --test .test-dist/packages/provider-runtime-broker/test/*.test.js",
+    "test:docs": "node scripts/verify-docs.mjs"
   },
   "dependencies": {
     "react": "19.2.6",

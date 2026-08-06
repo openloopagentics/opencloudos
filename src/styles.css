@@ -315,6 +315,9 @@ h3 { letter-spacing: -0.02em; }
 .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .test-grid article { min-height: 172px; padding: 20px; border: 1px solid var(--line); background: rgba(8, 18, 15, 0.7); }
 .test-status { width: fit-content; padding: 3px 6px; border: 1px solid #406849; color: var(--green); font: 500 7px var(--mono); }
+.auth-status-grid { margin-bottom: 18px; grid-template-columns: repeat(4, 1fr); }
+.auth-status-grid article { min-height: 195px; }
+.auth-status-grid .blocked-status { border-color: #685333; color: var(--amber); }
 .test-grid h3 { margin: 42px 0 7px; font-size: 14px; }
 .test-grid p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.65; }
 
@@ -481,7 +484,7 @@ h3 { letter-spacing: -0.02em; }
   .signal-strip { grid-template-columns: 1fr 1fr; }
   .signal-strip > div:nth-child(2) { border-right: 0; }
   .signal-strip > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-  .three-up, .invariant-grid, .test-grid { grid-template-columns: 1fr; }
+  .three-up, .invariant-grid, .test-grid, .auth-status-grid { grid-template-columns: 1fr; }
   .glossary-grid, .module-map, .flow-catalog, .failure-grid, .workstream-grid, .tracer-grid, .done-grid, .doc-rule-grid { grid-template-columns: 1fr; }
   .feature-card { min-height: 175px; }
   .feature-card h3 { margin-top: 35px; }

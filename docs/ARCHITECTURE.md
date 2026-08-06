@@ -118,6 +118,8 @@ The agent provider plane runs official provider clients in per-user credential c
 - a provider turn records the initiating user and provider connection without recording credential material;
 - a provider-policy or entitlement failure fails closed and never falls back to a chargeable API key without explicit user consent.
 
+**Current Implementation:** the provider-neutral Interface, static policy registry, in-memory connection metadata Implementation, audit sink, and synthetic Adapter exist in `packages/provider-runtime-broker`. AUTH-001 through AUTH-010 pass on that synthetic target. This proves contract behavior only; the Codex Adapter, durable store, Provider Runner, and process-isolated Credential Capsule remain implementation work. Claude subscription login is blocked unless its policy decision includes a recorded approval reference.
+
 ### Capability Broker module
 
 **Purpose:** create, attenuate, invoke, and revoke capabilities for agent sessions and gadgets.

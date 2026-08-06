@@ -14,6 +14,7 @@ provider profiles, decisions, and chronological project record.
 - [System architecture](./docs/ARCHITECTURE.md)
 - [Execution plan](./docs/EXECUTION_PLAN.md)
 - [Subscription-backed agent providers](./docs/SUBSCRIPTION_AUTH.md)
+- [Agent Provider compatibility](./docs/PROVIDER_COMPATIBILITY.md)
 - [Architecture decisions](./docs/adr/README.md)
 - [Documentation policy](./docs/DOCUMENTATION.md)
 - [Project log](./docs/PROJECT_LOG.md)

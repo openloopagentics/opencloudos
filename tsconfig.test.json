@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": ".test-dist",
+    "rootDir": ".",
+    "noEmit": false,
+    "noEmitOnError": true,
+    "types": ["node"]
+  },
+  "include": [
+    "packages/provider-runtime-broker/src/**/*.ts",
+    "packages/provider-runtime-broker/test/**/*.ts"
+  ]
+}

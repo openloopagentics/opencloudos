@@ -4,6 +4,20 @@
 
 This design lets each person connect an eligible Claude or ChatGPT/Codex subscription without turning OpenCloudOS into an OAuth implementation, a shared-token proxy, or a credential database.
 
+## Implementation status
+
+| Slice | Status | Evidence |
+|---|---|---|
+| Provider Runtime Broker Interface | Implemented | `packages/provider-runtime-broker/src` |
+| Synthetic Provider Adapter | Implemented | Private in-memory credential fixture and metadata store |
+| AUTH-001 through AUTH-010 | Passing | Node contract suite; no production credentials |
+| Documentation enforcement | Implemented | Structural verifier and material-change policy in CI |
+| Codex app-server Adapter | Next | Official-client spike and version pin not started |
+| Production Credential Capsule | Planned | Process/filesystem/environment isolation not yet implemented |
+| Claude subscription Adapter | `blocked_by_policy` | [Anthropic request drafted](./provider-approval/ANTHROPIC_REQUEST_DRAFT.md), not sent |
+
+The current code is contract evidence, not production subscription support. See the [compatibility matrix](./PROVIDER_COMPATIBILITY.md) for the release state.
+
 ## Product promise
 
 A user can choose **Connect Codex** or **Connect Claude**, authorize with the provider, see which connection will fund an agent turn, observe rate-limit or reauthorization state, and disconnect. The user never needs to understand access and refresh tokens.

@@ -43,6 +43,19 @@ Release OpenCloudOS 1.0 as a self-hostable, provider-neutral distribution of Clo
 | Observability | OpenTelemetry / OTLP |
 | Release channels | nightly, preview, stable |
 
+## Current execution status
+
+| Slice | Status | Evidence / next condition |
+|---|---|---|
+| M0 documentation control | Implemented | CI runs contract, documentation-integrity, material-change, type, and wiki build checks |
+| WS9 provider-neutral Broker | Implemented | Interface, policy registry, in-memory metadata store, normalized events, audit sink, and synthetic Adapter |
+| AUTH-001 through AUTH-010 | Passing on synthetic target | Ten deterministic tests; official-provider and process-isolation targets still required |
+| Anthropic approval package | Drafted, not sent | Maintainer must assign owner, review scope, and send through an approved channel |
+| Codex official Adapter | Next | Pin official client, run app-server device-code spike, and replace synthetic evidence with provider evidence |
+| Claude subscription Adapter | Blocked | Written Anthropic approval reference required before Adapter login can start |
+
+Implementation status is also published in `docs/SUBSCRIPTION_AUTH.md`, `docs/PROVIDER_COMPATIBILITY.md`, the Project Log, and the public wiki.
+
 ## Workstreams
 
 ### WS0 — Upstream and release engineering

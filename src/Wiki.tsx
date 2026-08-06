@@ -192,7 +192,7 @@ export function Wiki() {
         </nav>
 
         <div className="sidebar-footer">
-          <span className="status-dot" /> Planning baseline
+          <span className="status-dot" /> M0 execution active
           <strong>05 AUG 2026</strong>
         </div>
       </aside>
@@ -201,7 +201,7 @@ export function Wiki() {
         <WikiSection id="brief">
           <div className="hero-grid">
             <div className="hero-copy">
-              <div className="release-pill"><span /> Architecture + execution · v0.3</div>
+              <div className="release-pill"><span /> Architecture + execution · v0.4</div>
               <h1>A portable operating system for <em>agentic work.</em></h1>
               <p className="hero-lede">
                 A technical blueprint for taking Cloudflare OS beyond one provider—without losing the Gadget model,
@@ -461,6 +461,12 @@ export function Wiki() {
           <SectionHeading eyebrow="09 · Agent providers" title="Bring your subscription—not your token">
             Each user connects an eligible Claude or ChatGPT/Codex plan through the provider's official client. OpenCloudOS brokers status and agent events; it does not become an OAuth client or shared-token proxy.
           </SectionHeading>
+          <div className="test-grid auth-status-grid">
+            <article><div className="test-status">IMPLEMENTED</div><h3>Broker contract</h3><p>Provider-neutral Interface, policy gate, metadata store, normalized events, audit sink, and synthetic Adapter.</p></article>
+            <article><div className="test-status">10 / 10 PASS</div><h3>AUTH suite</h3><p>Ownership, non-observability, login binding, restart, revocation, collaboration, limits, policy, recovery, and version drift.</p></article>
+            <article><div className="test-status">NEXT</div><h3>Codex Adapter</h3><p>Pin <code>codex app-server</code>, prove device login, replace fixture evidence, and build the process-isolated capsule.</p></article>
+            <article><div className="test-status blocked-status">POLICY BLOCKED</div><h3>Claude subscription</h3><p>Approval request is drafted but not sent. The Broker refuses login without a recorded Anthropic approval reference.</p></article>
+          </div>
           <div className="auth-table">
             <div className="auth-head"><span>Mode</span><span>Official path</span><span>1.0 disposition</span><span>Non-negotiable rule</span></div>
             {[
@@ -520,6 +526,7 @@ export function Wiki() {
             ].map(([phase, title, timing, body]) => <article key={phase}><div className="phase-number">P{phase}</div><div><span>{timing}</span><h3>{title}</h3><p>{body}</p></div></article>)}
           </div>
           <div className="callout callout-warning"><span className="callout-icon">?</span><div><strong>First program gate</strong><p>Do not fund the distributed control plane until Milestone 1 proves that standalone workerd can preserve the required persistence, isolation, RPC, and recovery semantics.</p></div></div>
+          <div className="callout"><span className="callout-icon">✓</span><div><strong>M0 execution update</strong><p>The provider-neutral Broker and synthetic AUTH-001–010 suite are implemented. Documentation integrity and material-change checks now run in CI. Codex app-server is the next Adapter; the Anthropic approval request remains an unsent draft.</p><ExternalLink href="https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md">Current compatibility matrix</ExternalLink></div></div>
         </WikiSection>
 
         <WikiSection id="workstreams">
@@ -640,14 +647,14 @@ export function Wiki() {
           </SectionHeading>
           <div className="decision-table">
             {[
-              ["ADR-001", "Track upstream with explicit portability patches", "Proposed"],
-              ["ADR-002", "Use Kubernetes as the portable production baseline", "Proposed"],
-              ["ADR-003", "Retain workerd as the Gadget sandbox", "Proposed"],
-              ["ADR-004", "Use single-active Runtime Shards with epoch fencing", "Proposed"],
-              ["ADR-005", "Split control metadata from shard-local Workspace state", "Proposed"],
-              ["ADR-006", "Put provider variation behind real seams", "Proposed"],
-              ["ADR-007", "Make conformance and documentation release gates", "Proposed"],
-              ["ADR-008", "Use provider-owned, user-bound subscription authentication", "Proposed"],
+              ["ADR-0001", "Track upstream with explicit portability patches", "Proposed"],
+              ["ADR-0002", "Use Kubernetes as the portable production baseline", "Proposed"],
+              ["ADR-0003", "Retain workerd as the Gadget sandbox", "Proposed"],
+              ["ADR-0004", "Use single-active Runtime Shards with epoch fencing", "Proposed"],
+              ["ADR-0005", "Split control metadata from shard-local Workspace state", "Proposed"],
+              ["ADR-0006", "Put provider variation behind real seams", "Proposed"],
+              ["ADR-0007", "Make conformance and documentation release gates", "Proposed"],
+              ["ADR-0008", "Use provider-owned, user-bound subscription authentication", "Proposed"],
             ].map(([id, title, status]) => <div key={id}><code>{id}</code><strong>{title}</strong><span>{status}</span></div>)}
           </div>
           <p className="source-note">Review full rationale and consequences in the <ExternalLink href="https://github.com/openloopagentics/opencloudos/tree/main/docs/adr">ADR registry</ExternalLink>.</p>
@@ -683,6 +690,7 @@ export function Wiki() {
               ["ARCHITECTURE.md", "Owns modules, interfaces, invariants, state, flows, and failure behavior"],
               ["EXECUTION_PLAN.md", "Owns workstreams, milestones, dependencies, risk, and release gates"],
               ["SUBSCRIPTION_AUTH.md", "Owns agent-provider authentication, billing authority, policy gates, and AUTH scenarios"],
+              ["PROVIDER_COMPATIBILITY.md", "Owns time-sensitive provider support, client pin, evidence, and approval state"],
               ["PROJECT_LOG.md", "Owns the chronological record of material work"],
               ["Public wiki", "Makes the important parts navigable to contributors and operators"],
             ].map(([source, ownership], index) => <article key={source}><span>{index + 1}</span><code>{source}</code><p>{ownership}</p></article>)}
@@ -707,6 +715,7 @@ export function Wiki() {
             A chronological, append-only view of material research, design, implementation, and operational changes.
           </SectionHeading>
           <div className="project-timeline">
+            <article><div><span>05 AUG 2026</span><i>Shipped code</i></div><h3>Provider Runtime Broker contract made executable</h3><p>Implemented the provider-neutral Broker, policy gate, in-memory store, normalized events, secret-free audit, synthetic Adapter, and all ten AUTH scenarios. CI now checks documentation integrity and blocks material changes without wiki, architecture, and Project Log updates.</p><footer>Evidence · 10/10 AUTH tests · docs verifier · TypeScript build · no production credentials</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped design</i></div><h3>Personal Claude and Codex access designed</h3><p>Added user-owned Provider Connections, Provider Runtime Broker, official-client Adapters, per-user Credential Capsules, ten AUTH scenarios, TB-007, ADR-008, and provider-policy release gates. Codex is planned through app-server managed login; Claude subscription mode is blocked pending written Anthropic approval.</p><footer>Evidence · first-party auth research · architecture + execution records · production build · Pages deployment</footer></article>
             <article><div><span>05 AUG 2026</span><i>Shipped</i></div><h3>Detailed execution design</h3><p>Added canonical language, deep module design, state and failure semantics, nine workstreams, six milestones, tracer bullets, release gates, documentation policy, and seven initial ADRs.</p><footer>Evidence · commit ecd1f53 · Pages run 31058568568 · production and subpath builds · HTTP 200</footer></article>
             <article><div><span>05 AUG 2026</span><i>Follow-up</i></div><h3>Delivery maintenance recorded</h3><p>Pages reported a Node.js 20 action-runtime deprecation warning. GitHub also reported four Dependabot alerts: two high and two moderate. Both are queued for explicit maintenance triage.</p><footer>Scope · CI action revisions · dependency security posture</footer></article>
@@ -768,9 +777,10 @@ export function Wiki() {
               ["Claude Code authentication", "Subscription login, credential storage, precedence, expiry, and setup-token", "https://code.claude.com/docs/en/authentication"],
               ["Claude Agent SDK overview", "Third-party Claude.ai login and subscription-limit approval requirement", "https://code.claude.com/docs/en/agent-sdk/overview"],
               ["Claude Agent SDK subscription update", "Current time-sensitive treatment of third-party subscription usage", "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan"],
+              ["Agent Provider compatibility record", "Current implementation, official paths, policy state, and evidence gaps", "https://github.com/openloopagentics/opencloudos/blob/main/docs/PROVIDER_COMPATIBILITY.md"],
             ].map(([title, note, href], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><ExternalLink href={href}>{title}</ExternalLink><p>{note}</p></div></article>)}
           </div>
-          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.3 · August 5, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
+          <footer className="page-footer"><div><span className="brand-mark">OC</span><strong>OpenCloudOS field guide</strong></div><p>Architecture + execution baseline v0.4 · August 5, 2026 · Every change documented.</p><a href="#brief">Back to top ↑</a></footer>
         </WikiSection>
       </main>
     </div>
